@@ -21,7 +21,7 @@ for _ in range(m):
 
 ans = 0
 flag = 0
-for i in range(cur_A) :
+for i in range(1,cur_A) :
     if arr_A[i] > arr_B[i] : 
         if flag == 2 : 
             ans += 1
