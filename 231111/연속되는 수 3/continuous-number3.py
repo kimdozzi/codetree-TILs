@@ -1,18 +1,15 @@
 import sys
 si = sys.stdin.readline
 n = int(si())
-lst = [int(si()) for _ in range(n)]
-arr = [1] * len(lst)
+arr = [int(si()) for _ in range(n)]
 
-for i in range(1,len(lst)) :
-    if lst[i] < 0 and lst[i-1] < 0 :
-        arr[i] += arr[i-1]
+ans, cnt = 0, 0
+for i in range(n) :
+    if i >= 1 and arr[i] * arr[i-1] > 0 : 
+        cnt += 1
+    else :
+        cnt = 1
     
-    elif lst[i] > 0 and lst[i-1] > 0 :
-        arr[i] += arr[i-1]
+    ans = max(ans,cnt)
 
-
-mx = 0
-for i in arr :
-    mx = max(mx, i)
-print(mx)
+print(ans)
