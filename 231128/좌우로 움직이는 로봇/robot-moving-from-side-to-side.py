@@ -24,7 +24,7 @@ for _ in range(m) :
 if time_a < time_b :
     for i in range(time_a, time_b) :
         pos_a[i] = pos_a[i-1]
-ellif time_a > time_b :
+elif time_a > time_b :
     for i in range(time_b, time_a) :
         pos_b[i] = pos_b[i-1]
 
