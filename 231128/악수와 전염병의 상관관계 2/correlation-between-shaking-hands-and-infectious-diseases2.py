@@ -22,9 +22,10 @@ for _,x,y in data :
             
         people[x] -= 1
     
-    if people[y] > 0 :
+    elif people[y] > 0 :
         if people[x] == -1 :
             people[x] = k
+
         people[y] -= 1
 
 ans = ''
