@@ -19,14 +19,19 @@ for _,x,y in data :
     if people[x] > 0 :
         if people[y] == -1 :
             people[y] = k
+        elif people[y] > 0 :
+            people[y] -= 1
             
         people[x] -= 1
     
-    elif people[y] > 0 :
+    elif people[y] > 0:
         if people[x] == -1 :
             people[x] = k
+        elif people[x] > 0 :
+            people[x] -= 1
 
         people[y] -= 1
+
 
 ans = ''
 for i in people[1:] :
