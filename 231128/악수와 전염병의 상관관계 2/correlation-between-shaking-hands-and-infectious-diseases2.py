@@ -16,12 +16,15 @@ for _ in range(tc) :
 data.sort()
 
 for _,x,y in data :
-    if people[x] > 0 and people[y] == -1 :
-        people[y] = k
+    if people[x] > 0 :
+        if people[y] == -1 :
+            people[y] = k
+            
         people[x] -= 1
     
-    elif people[y] > 0 and people[x] == -1 :
-        people[x] = k
+    if people[y] > 0 :
+        if people[x] == -1 :
+            people[x] = k
         people[y] -= 1
 
 ans = ''
