@@ -1,43 +1,37 @@
-# N명의 개발자, T번에 걸쳐 t초에 x개발자가 y개발자와 악수를 나눔 
-# k번의 악수동안 전염병을 옮김, 개발자 번호 p 
-
 import sys
 si = sys.stdin.readline
 
+class Shake :
+    def __init__(self, time, person1, person2) :
+
+
 n,k,p,tc = map(int, si().split())
+shakes = []
+for _ in range(t) :
+    time, person1, person2 = tuple(map(int, si().split()))
+    shakes.append(Shake(time, person1, person2))
 
-people = [-1] * (n+1)
-people[p] = k
+shake_num = [0] * (n+1)
+infected = [False] * (n+1)
 
-data = []
-for _ in range(tc) :
-    t,x,y = map(int,si().split())
-    data.append((t,x,y))
-data.sort()
+infected[p] = True
 
-for _,x,y in data :
-    if people[x] > 0 :
-        if people[y] == -1 :
-            people[y] = k
-        elif people[y] > 0 :
-            people[y] -= 1
-            
-        people[x] -= 1
-    
-    elif people[y] > 0:
-        if people[x] == -1 :
-            people[x] = k
-        elif people[x] > 0 :
-            people[x] -= 1
+shakes.sort(key=lambda x: x.time)
 
-        people[y] -= 1
+for shake in shakes :
+    target1, target2 = shake.person1, shake.person2
 
+    if infected[target1] : shake_num[target1] += 1
+    if infected[target2] : shake_num[target2] += 1
 
-ans = ''
-for i in people[1:] :
-    if i >= 0 :
-        ans+='1'
-    else:
-        ans+='0'
+    if shake_num[target1] <= k and infected[target1] :
+        infected[target2] = True 
 
-print(ans)
+    if shake_num[target2] <= k and infected[target2]:
+        infected[target1] = True 
+        
+for i in range(1, n + 1):
+	if infected[i]:
+		print(1, end="")
+	else:
+		print(0, end="")
