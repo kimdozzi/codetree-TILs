@@ -7,7 +7,7 @@ si = sys.stdin.readline
 n,k,p,tc = map(int, si().split())
 
 people = [-1] * (n+1)
-people[k] = p
+people[p] = k
 
 data = []
 for _ in range(tc) :
@@ -31,7 +31,7 @@ ans = ''
 for i in people[1:] :
     if i >= 0 :
         ans+='1'
-    else :
+    else:
         ans+='0'
 
 print(ans)
