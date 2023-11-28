@@ -3,11 +3,12 @@ si = sys.stdin.readline
 
 class Shake :
     def __init__(self, time, person1, person2) :
+        self.time, self.person1, self.person2 = time, person1, person2
 
 
 n,k,p,tc = map(int, si().split())
 shakes = []
-for _ in range(t) :
+for _ in range(tc) :
     time, person1, person2 = tuple(map(int, si().split()))
     shakes.append(Shake(time, person1, person2))
 
