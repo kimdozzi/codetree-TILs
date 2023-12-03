@@ -30,9 +30,8 @@ https://www.codetree.ai/missions/5/problems/shoot-a-laser-in-the-mirror-2?&utm_s
 
 ### Case 2. `/` 모양
 <img src="https://github.com/kimdozzi/codetree-TILs/assets/95005061/a109ded7-4a57-469e-bf58-275dd4be4e89" width="300" height="300"/>
-원리는 같다. 다만, xor 연산을 이용하는 것이 아닌, 3 - 현재 방향 dir을 해주면 된다. 
 
-위와 같은 케이스를 고려하여 다음 이동할 좌표를 구해주고, move_num을 1씩 증가시키면서 총 몇번 거울에 튕기는 지 계산해주면 된다. 좀 어려웠다....ㅎ
+원리는 같다. 다만, xor 연산을 이용하는 것이 아닌, 3 - 현재 방향 dir을 해주면 된다. 위와 같은 케이스를 고려하여 다음 이동할 좌표를 구해주고, move_num을 1씩 증가시키면서 총 몇번 거울에 튕기는 지 계산해주면 된다. 좀 어려웠다....ㅎ
 
 
 ---
