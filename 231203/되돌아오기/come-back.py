@@ -3,27 +3,30 @@ si = sys.stdin.readline
 
 n = int(si())
 direction = {'N':0,'E':1,'S':2,'W':3}
-dir = ((-1,0),(0,1),(1,0),(0,-1))
-x, y = 1000, 1000
+di = ((-1,0),(0,1),(1,0),(0,-1))
+x, y = 0, 0
+elapsed_time = 0
 
-cnt = 0
-arr = []
+def move(move_dir, dist) :
+    global di, x, y, elapsed_time, ans 
+    dx, dy = di[move_dir]
+
+    for _ in range(dist) :
+        x,y = x+dx, y+dy
+        elapsed_time += 1
+
+        if x == 0 and y == 0 :
+            return True 
+    
+    return False
+
+
 for _ in range(n) :
-    dir_str, d = si().split()
-    arr.append((dir_str, d))
+    dir_str, dist = si().split()
+    dist = int(dist)
 
-flag = False
-for dir_str,d in arr :
-    if flag : break
-    for _ in range(int(d)) :
-        nx,ny = x+dir[direction[dir_str]][0], y+dir[direction[dir_str]][1]
-        cnt += 1
-        if nx == 1000 and ny == 1000 : 
-            print(cnt)
-            flag = True
-            break
+    move_dir = direction[dir_str]
 
-        x,y = nx,ny
-
-if not flag :
-    print(-1)
+    if move(move_dir, dist) :
+        print(elapsed_time)
+        break
