@@ -6,7 +6,7 @@ direction = {'N':0,'E':1,'S':2,'W':3}
 di = ((-1,0),(0,1),(1,0),(0,-1))
 x, y = 0, 0
 elapsed_time = 0
-ans = 0
+ans = -1
 
 def move(move_dir, dist) :
     global di, x, y, elapsed_time, ans 
