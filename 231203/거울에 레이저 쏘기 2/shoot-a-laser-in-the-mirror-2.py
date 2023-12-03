@@ -1,9 +1,6 @@
 # 변수 선언 및 입력
 n = int(input())
-arr = [
-    input()
-    for _ in range(n)
-]
+arr = [input() for _ in range(n)]
 
 start_num = int(input())
 
@@ -50,6 +47,7 @@ def simulate(x, y, move_dir):
 
 # 시작 위치와 방향을 구합니다.
 x, y, move_dir = initialize(start_num)
+
 # (x, y)에서 move_dir 방향으로 시작하여
 # 시뮬레이션을 진행합니다.
 move_num = simulate(x, y, move_dir)
