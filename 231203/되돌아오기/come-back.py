@@ -6,6 +6,7 @@ direction = {'N':0,'E':1,'S':2,'W':3}
 di = ((-1,0),(0,1),(1,0),(0,-1))
 x, y = 0, 0
 elapsed_time = 0
+ans = 0
 
 def move(move_dir, dist) :
     global di, x, y, elapsed_time, ans 
@@ -16,6 +17,7 @@ def move(move_dir, dist) :
         elapsed_time += 1
 
         if x == 0 and y == 0 :
+            ans = elapsed_time
             return True 
     
     return False
@@ -28,5 +30,6 @@ for _ in range(n) :
     move_dir = direction[dir_str]
 
     if move(move_dir, dist) :
-        print(elapsed_time)
         break
+
+print(ans)
