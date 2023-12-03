@@ -14,6 +14,7 @@ for _ in range(n) :
 
 flag = False
 for dir_str,d in arr :
+    if flag : break
     for _ in range(int(d)) :
         nx,ny = x+dir[direction[dir_str]][0], y+dir[direction[dir_str]][1]
         cnt += 1
