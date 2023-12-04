@@ -17,7 +17,7 @@ while cnt < r*c :
     nx,ny = x+dirs[direction][0], y+dirs[direction][1]
     if in_range(nx,ny) and board[nx][ny] == '':
         board[nx][ny] = chr(num)
-        num = 65 if num > 90 else num + 1
+        num = 65 if num >= 90 else num + 1
         x,y=nx,ny
         cnt+=1
         
