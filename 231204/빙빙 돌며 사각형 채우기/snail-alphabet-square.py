@@ -12,13 +12,14 @@ x,y = 0,0
 board[x][y] = chr(65)
 num = 1
 direction = 0
-
-while num-65 < r*c :
+cnt = 1
+while cnt < r*c :
     nx,ny = x+dirs[direction][0], y+dirs[direction][1]
     if in_range(nx,ny) and board[nx][ny] == '':
         board[nx][ny] = chr(num + 65)
         num = (num + 1 + 65) % 65
         x,y=nx,ny
+        cnt+=1
         
     else :
         direction = (direction + 1 + 4) % 4
