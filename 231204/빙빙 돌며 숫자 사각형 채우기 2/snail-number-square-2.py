@@ -12,7 +12,7 @@ x,y = 0,0
 board[x][y] = 1
 num = 2
 direction = 0
-while num <= r*c :
+while num-1 < r*c :
     nx,ny = x+dirs[direction][0], y+dirs[direction][1]
     if in_range(nx,ny) and board[nx][ny] == 0 :
         board[nx][ny] = num
