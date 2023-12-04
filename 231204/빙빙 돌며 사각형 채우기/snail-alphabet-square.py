@@ -10,14 +10,14 @@ r,c=map(int,si().split())
 board=[[''] * c for _ in range(r)]
 x,y = 0,0
 board[x][y] = chr(65)
-num = 66
+num = 1
 direction = 0
 
 while num-65 < r*c :
     nx,ny = x+dirs[direction][0], y+dirs[direction][1]
     if in_range(nx,ny) and board[nx][ny] == '':
-        board[nx][ny] = chr(num)
-        num += 1
+        board[nx][ny] = chr(num + 65)
+        num = (num + 1 + 65) % 65
         x,y=nx,ny
         
     else :
