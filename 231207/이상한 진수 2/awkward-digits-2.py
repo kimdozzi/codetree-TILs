@@ -8,7 +8,8 @@ def bin_to_int(x) :
     for i in range(len(x)) :
         if x[i] == '1' :
             res += (2**l)
-            l -= 1
+        l -= 1
+    
     return res
 
 mx_num = float('-inf')
