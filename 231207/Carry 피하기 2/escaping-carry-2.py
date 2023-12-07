@@ -20,6 +20,5 @@ for i in range(len(arr)) :
             
             if not flag :
                 res += arr[i]+arr[j]+arr[k]
-
-            ans = max(ans, res)
+                ans = max(ans, res)
 print(ans)
