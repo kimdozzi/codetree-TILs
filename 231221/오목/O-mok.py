@@ -7,14 +7,17 @@ dirs = [[0,1],[1,1],[1,0],[1,-1]]
 
 def in_range(x,y) :
     return 0 <= x,y < 19
-    
+
 def calculate(x,y,direction) :
     idx = direction
 
     flag = False
     for k in range(4) :
         nx, ny = x + dirs[idx][0], y + dirs[idx][1]
-        if not in_range(nx,ny) : continue
+        if not in_range(nx,ny) : 
+            flag = True
+            continue
+
         if board[nx][ny] != board[x][y] : 
             flag = True
             break
