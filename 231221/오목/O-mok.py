@@ -14,11 +14,7 @@ def calculate(x,y,direction) :
     flag = False
     for k in range(4) :
         nx, ny = x + dirs[idx][0], y + dirs[idx][1]
-        if not in_range(nx,ny) : 
-            flag = True
-            continue
-
-        if board[nx][ny] != board[x][y] : 
+        if not in_range(nx,ny) or board[nx][ny] != board[x][y]: 
             flag = True
             break
         x,y = nx, ny
