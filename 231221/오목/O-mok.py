@@ -42,5 +42,6 @@ for i in range(15) :
                 
             elif calculate(i,j,3) :
                 print('/',board[i][j])
+                print(i+1, j+1)
                 print(i+3, j-1)
                 exit(0)
