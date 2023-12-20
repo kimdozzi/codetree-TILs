@@ -6,7 +6,7 @@ board=[list(map(int, si().split())) for _ in range(19)]
 dirs = [[0,1],[1,1],[1,0],[1,-1]]
 
 def in_range(x,y) :
-    return 0 <= x,y < 19
+    return 0 <= x < 19 and 0 <= y < 19
 
 def calculate(x,y,direction) :
     idx = direction
