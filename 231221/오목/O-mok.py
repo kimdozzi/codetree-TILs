@@ -44,3 +44,5 @@ for i in range(15) :
                 print(board[i][j])
                 print(i+3, j-1)
                 exit(0)
+
+print(0)
