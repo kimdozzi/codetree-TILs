@@ -3,7 +3,7 @@ si = sys.stdin.readline
 
 board=[list(map(int, si().split())) for _ in range(19)]
 
-dirs = [[0,1],[1,1],[1,0],[-1,1]]
+dirs = [[0,1],[1,1],[1,0],[1,-1]]
 
 def calculate(x,y,direction) :
     idx = direction
@@ -42,6 +42,5 @@ for i in range(15) :
                 
             elif calculate(i,j,3) :
                 print('/',board[i][j])
-                print(i+1, j+1)
                 print(i+3, j-1)
                 exit(0)
