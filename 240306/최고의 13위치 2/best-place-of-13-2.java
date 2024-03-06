@@ -20,7 +20,7 @@ public class Main {
                 int cnt = 0;
                 for (int k=j; k<j+3; k++) { // 1*3 크기만큼 동전 저장
                     visited[i][k] = true; // 방문표시
-                    cnt++;
+                    if (board[i][k]>0) cnt++;
                 }
 
                 for (int a=i; a<n; a++) {
