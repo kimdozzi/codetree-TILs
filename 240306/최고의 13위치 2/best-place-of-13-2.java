@@ -17,24 +17,14 @@ public class Main {
     static void solve() {
         for (int i=0; i<n; i++) {
             for (int j=0; j<n-2; j++) {
-                int cnt = 0;
-                for (int k=j; k<j+3; k++) { // 1*3 크기만큼 동전 저장
-                    visited[i][k] = true; // 방문표시
-                    if (board[i][k]>0) cnt++;
-                }
-
                 for (int a=0; a<n; a++) {
-                    int ccnt = 0;
                     for (int b=0; b<n-2; b++) {
-                        if (visited[a][b]) continue;
-                        if (i==a && Math.abs(j-b)<=2) continue;
-                        if (board[a][b] > 0) ccnt++;
-                    }
-                    answer = Math.max(answer, cnt+ccnt);
-                }
+                        if (i==a && Math.abs(j-b) <= 2) continue;
 
-                for (int k=j; k<j+3; k++) {
-                    visited[i][k] = false; // 방문표시 해제
+                        int cnt1 = board[i][j] + board[i][j+1] + board[i][j+2];
+                        int cnt2 = board[a][b] + board[a][b+1] + board[a][b+2];
+                        answer = Math.max(answer, cnt1, cnt2);
+                    }   
                 }
             }
         }
