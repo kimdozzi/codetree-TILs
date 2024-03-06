@@ -27,7 +27,7 @@ public class Main {
                     int ccnt = 0;
                     for (int b=0; b<n-2; b++) {
                         if (visited[a][b]) continue;
-                        if (i==a && j>b) continue;
+                        if (i==a && abs(j-2)<=2) continue;
                         if (board[a][b] > 0) ccnt++;
                     }
                     answer = Math.max(answer, cnt+ccnt);
