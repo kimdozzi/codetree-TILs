@@ -3,7 +3,6 @@ import java.io.*;
 public class Main {
     static int n;
     static int[][] board;
-    static boolean[][] visited;
     static int answer;
     public static void main(String[] args) throws IOException {
         // 여기에 코드를 작성해주세요.
@@ -34,11 +33,7 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         n = Integer.parseInt(br.readLine());
         board = new int[n][n];
-        visited = new boolean[n][n];
-        for (int i=0; i<n; i++) {
-            Arrays.fill(visited[i], false);
-        }
-
+      
         StringTokenizer st;
         for (int i=0; i<n; i++) {
             st = new StringTokenizer(br.readLine());
