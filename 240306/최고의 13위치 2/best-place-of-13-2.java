@@ -23,7 +23,7 @@ public class Main {
 
                         int cnt1 = board[i][j] + board[i][j+1] + board[i][j+2];
                         int cnt2 = board[a][b] + board[a][b+1] + board[a][b+2];
-                        answer = Math.max(answer, cnt1, cnt2);
+                        answer = Math.max(answer, cnt1+cnt2);
                     }   
                 }
             }
