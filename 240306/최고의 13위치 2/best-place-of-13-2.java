@@ -23,7 +23,7 @@ public class Main {
                     if (board[i][k]>0) cnt++;
                 }
 
-                for (int a=i; a<n; a++) {
+                for (int a=0; a<n; a++) {
                     int ccnt = 0;
                     for (int b=0; b<n-2; b++) {
                         if (visited[a][b]) continue;
