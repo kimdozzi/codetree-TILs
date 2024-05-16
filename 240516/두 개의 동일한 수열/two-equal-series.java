@@ -25,15 +25,17 @@ public class Main {
         Arrays.sort(arr1);
         Arrays.sort(arr2);
         
+        boolean flag = false;
         for (i=0; i<n; i++) {
             if (arr1[i] != arr2[i]) {
-                System.out.println("No");
+                flag = true;
                 break;
             }
         }
-        if (i != n-1) {
+        if (!flag) {
             System.out.println("Yes");
         }
+        else System.out.println("No");
 
     }
 }
