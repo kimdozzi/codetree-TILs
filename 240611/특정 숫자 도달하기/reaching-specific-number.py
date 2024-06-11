@@ -10,4 +10,4 @@ for i in range(len(lst)) :
         break
     res += lst[i]
 
-print(res, res/idx)
+print("%d %.1lf"%(res, res/idx))
