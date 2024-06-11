@@ -11,7 +11,7 @@ public class Main {
         for (int i=0; i<n; i++) {
             int val = sc.nextInt();
             int pos = sc.nextInt();
-            arr[pos] = val;
+            arr[pos] += val;
         }
         int mx = -1;
         for (int i=k; i<MAX_N-k; i++) {
