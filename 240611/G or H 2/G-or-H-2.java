@@ -24,20 +24,23 @@ public class Main {
         int ans = 0;
         for (int i=0; i<=100; i++) {
             for (int j=i; j<=100; j++) {
-                int s=101, e=-1;
-                int g=0,h=0;
+                int s = 101, e = -1;
+                int g=0, h=0;
                 for (int k=i; k<=j; k++) {
                     if (arr[k] != null && arr[k].equals("G")){
-                        s = Math.min(s, k);
+                        if (k < s) s = k;
+                        if (k > e) e = k;
                         g++;
                     }
                     else if (arr[k] != null && arr[k].equals("H")) {
-                        e = Math.max(e, k);
+                        if (k < s) s = k;
+                        if (k > e) e = k;
                         h++;
                     }
+                    
                 }
                //System.out.println(s + " " + e);
-                if ((g>0 && h==0) || (h>0 && g==0) || h==g) ans = Math.max(ans, e-s+1);
+                if ((g>0 && h==0) || (h>0 && g==0) || h==g) ans = Math.max(ans, e-s);
             }
         }
         System.out.println(ans);
