@@ -22,7 +22,7 @@ public class Main {
 
     private static int find() {
         int min_n = MN;
-        for (int i=0; i<N-T; i++) {
+        for (int i=0; i<N-T+1; i++) {
 
             int sum = 0;
             for (int j=i; j<i+T; j++) {
