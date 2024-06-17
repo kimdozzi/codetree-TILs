@@ -7,7 +7,7 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         N = sc.nextInt();
         H = sc.nextInt();
-        T = Math.min(10,sc.nextInt());
+        T = sc.nextInt();
 
         arr = new int[N];
 
@@ -20,9 +20,9 @@ public class Main {
     }
 
     private static int find() {
-        int mn = 2000001;
+        int mn = 20001;
+        int sum = 0;
         for (int i=0; i<N-T; i++) {
-            int sum = 0;
             for (int j=i; j<i+T; j++) {
                 sum += Math.abs(H-arr[j]);
             }
