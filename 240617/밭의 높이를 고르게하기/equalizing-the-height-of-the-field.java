@@ -1,6 +1,7 @@
 import java.util.*;
 public class Main {
     static int N,H,T, answer = 0;
+    static final int MN = 20001;
     static int[] arr; 
     public static void main(String[] args) {
         // 여기에 코드를 작성해주세요.
@@ -20,14 +21,16 @@ public class Main {
     }
 
     private static int find() {
-        int mn = 20001;
-        int sum = 0;
+        int min_n = MN;
         for (int i=0; i<N-T; i++) {
+
+            int sum = 0;
             for (int j=i; j<i+T; j++) {
                 sum += Math.abs(H-arr[j]);
             }
-            mn = Math.min(sum, mn);
+            min_n = Math.min(sum, min_n);
         }
-        return mn;
+        if (min_n == MN) return 0;
+        return min_n;
     }
 }
