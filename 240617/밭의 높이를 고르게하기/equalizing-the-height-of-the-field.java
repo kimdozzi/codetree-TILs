@@ -7,7 +7,7 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         N = sc.nextInt();
         H = sc.nextInt();
-        T = sc.nextInt();
+        T = Math.min(10,sc.nextInt());
 
         arr = new int[N];
 
