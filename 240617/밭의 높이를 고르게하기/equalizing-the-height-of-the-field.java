@@ -20,7 +20,7 @@ public class Main {
     }
 
     private static int find() {
-        int mn = 20001;
+        int mn = 2000001;
         for (int i=0; i<N-T; i++) {
             int sum = 0;
             for (int j=i; j<i+T; j++) {
