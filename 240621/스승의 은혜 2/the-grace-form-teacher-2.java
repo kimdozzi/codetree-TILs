@@ -11,14 +11,14 @@ public class Main {
         int maxCnt = 0;
         
         for(int i=0; i<N; i++) 
-            arr[i] = (int) (sc.nextInt() / 2);
+            arr[i] = sc.nextInt();
 
         for (int i=0; i<N; i++) {
             int sum = B;
             int cnt = 0;
 
-            if(sum-arr[i] >= 0) {
-                    sum -= arr[i];
+            if(sum-(int)(arr[i]/2) >= 0) {
+                    sum -= (int)(arr[i]/2);
                     cnt++;
             }
             for (int j=0; j<N; j++) {
