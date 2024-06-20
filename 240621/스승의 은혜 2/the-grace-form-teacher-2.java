@@ -13,25 +13,25 @@ public class Main {
         for(int i=0; i<N; i++) 
             arr[i] = sc.nextInt();
 
-        for (int i=0; i<N; i++) {
+        Arrays.sort(arr);
+        
+        for (int i=0; i<1001; i++) {
             int sum = B;
             int cnt = 0;
-
-            if(sum-(int)(arr[i]/2) >= 0) {
-                    sum -= (int)(arr[i]/2);
+            
+            for (int j=0; j<1001; j++) {
+                if (i==j) {
+                    if(arr[j] > 0 && sum-(int)(arr[j]/2) >= 0) {
+                    sum -= (int)(arr[j]/2);
                     cnt++;
-            }
-            for (int j=0; j<N; j++) {
-                if (i==j) continue;
-
-                if(sum-arr[j] >= 0) {
+                    }
+                }
+                else if(arr[j] > 0 && sum-arr[j] >= 0) {
                     sum -= arr[j];
                     cnt++;
                 }
             }
-
             maxCnt = Math.max(cnt, maxCnt);
-
         }
         System.out.print(maxCnt);
     }
