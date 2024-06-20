@@ -8,6 +8,7 @@ public class Main {
         int N = sc.nextInt();
         int B = sc.nextInt();
         int[] arr = new int[1001];
+        Arrays.fill(arr, -1);
         int maxCnt = 0;
         
         for(int i=0; i<N; i++) 
@@ -15,18 +16,18 @@ public class Main {
 
         Arrays.sort(arr);
         
-        for (int i=0; i<1000; i++) {
+        for (int i=0; i<1001; i++) {
             int sum = B;
             int cnt = 0;
             
-            for (int j=0; j<1000; j++) {
+            for (int j=0; j<1001; j++) {
                 if (i==j) {
-                    if(arr[j] > 0 && sum-(int)(arr[j]/2) >= 0) {
+                    if(arr[j] > -1 && sum-(int)(arr[j]/2) >= 0) {
                     sum -= (int)(arr[j]/2);
                     cnt++;
                     }
                 }
-                else if(arr[j] > 0 && sum-arr[j] >= 0) {
+                else if(arr[j] > -1 && sum-arr[j] >= 0) {
                     sum -= arr[j];
                     cnt++;
                 }
