@@ -7,7 +7,7 @@ public class Main {
 
         int N = sc.nextInt();
         int B = sc.nextInt();
-        int[] arr = new int[1001];
+        int[] arr = new int[1000];
         Arrays.fill(arr, -1);
         int maxCnt = 0;
         
@@ -16,11 +16,11 @@ public class Main {
 
         Arrays.sort(arr);
         
-        for (int i=0; i<1001; i++) {
+        for (int i=0; i<1000; i++) {
             int sum = B;
             int cnt = 0;
             
-            for (int j=0; j<1001; j++) {
+            for (int j=0; j<1000; j++) {
                 if (i==j) {
                     if(arr[j] > -1 && sum-(int)(arr[j]/2) >= 0) {
                     sum -= (int)(arr[j]/2);
