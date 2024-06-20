@@ -12,10 +12,15 @@ public class Main {
         
         for(int i=0; i<N; i++) 
             arr[i] = (int) (sc.nextInt() / 2);
-        
+
         for (int i=0; i<N; i++) {
             int sum = B;
             int cnt = 0;
+
+            if(sum-arr[i] >= 0) {
+                    sum -= arr[i];
+                    cnt++;
+            }
             for (int j=0; j<N; j++) {
                 if (i==j) continue;
 
