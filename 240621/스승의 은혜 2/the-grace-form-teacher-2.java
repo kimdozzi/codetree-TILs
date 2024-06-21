@@ -1,39 +1,54 @@
-import java.util.*;
+import java.util.Scanner;
+import java.util.Arrays;
 
 public class Main {
+    public static final int MAX_N = 1000;
+    
+    public static int n, b;
+    public static int[] p = new int[MAX_N];
+
     public static void main(String[] args) {
-        // 여기에 코드를 작성해주세요.
         Scanner sc = new Scanner(System.in);
+        // 입력
+        n = sc.nextInt();
+        b = sc.nextInt();
 
-        int N = sc.nextInt();
-        int B = sc.nextInt();
-        int[] arr = new int[1000];
-        Arrays.fill(arr, -1);
-        int maxCnt = 0;
-        
-        for(int i=0; i<N; i++) 
-            arr[i] = sc.nextInt();
+        for(int i = 0; i < n; i++)
+            p[i] = sc.nextInt();
 
-        Arrays.sort(arr);
+        int ans = 0;
         
-        for (int i=0; i<1000; i++) {
-            int sum = B;
+        // 한 명의 학생에 선물 쿠폰을 쓸 때 선물 가능한 학생의 최대 명수를 구합니다.
+        for(int i = 0; i < n; i++) {
+            // i번째 학생의 선물에 쿠폰을 쓸 때 선물 가능한 학생 수를 구합니다.
+
+            // tmp배열을 만들어 i번째 학생의 선물에 쿠폰을 쓸 때
+            // 각 학생의 원하는 선물 가격을 저장합니다.
+            int[] tmp = new int[MAX_N];
+            for(int j = 0; j < n; j++)
+                tmp[j] = p[j];
+            tmp[i] /= 2;
+
+            // 학생을 선물 가격 순으로 정렬합니다.
+            // 선물 가격이 가장 작은 학생부터 선물을 사 줄 때,
+            // 반드시 가장 많은 학생에게 선물을 줄 수 있습니다.
+            Arrays.sort(tmp, 0, n);
+
+            int student = 0;
             int cnt = 0;
-            
-            for (int j=0; j<1000; j++) {
-                if (i==j) {
-                    if(arr[j] > -1 && sum-(int)(arr[j]/2) >= 0) {
-                    sum -= (int)(arr[j]/2);
-                    cnt++;
-                    }
-                }
-                else if(arr[j] > -1 && sum-arr[j] >= 0) {
-                    sum -= arr[j];
-                    cnt++;
-                }
+
+            // 가장 많은 학생에게 선물을 줄 때, 그 학생 수를 구합니다.
+            // student : 선물받은 학생 수 / cnt : 현재까지 쓴 돈
+            for(int j = 0; j < n; j++) {
+                if(cnt + tmp[j] > b)
+                    break;
+                cnt += tmp[j];
+                student++;
             }
-            maxCnt = Math.max(cnt, maxCnt);
+
+            ans = Math.max(ans, student);
         }
-        System.out.print(maxCnt);
+
+        System.out.print(ans);
     }
 }
