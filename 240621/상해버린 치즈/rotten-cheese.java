@@ -68,9 +68,7 @@ public class Main {
                 // person이 i번째 치즈를 처음 먹었거나
                 // 이전보다 더 빨리 먹게 된 경우 time배열을 갱신합니다.
                 int person = info1[j].p;
-                if(time[person] == 0)
-                    time[person] = info1[j].t;
-                else if(time[person] > info1[j].t)
+                if(time[person] == 0 || time[person] > info1[j].t)
                     time[person] = info1[j].t;
             }
 
@@ -81,9 +79,7 @@ public class Main {
                 // person이 i번째 치즈를 먹지 않았거나
                 // i번째 치즈를 먹은 시간보다 먼저 아픈 경우 모순이 생깁니다.
                 int person = info2[j].p;
-                if(time[person] == 0)
-                    possible = false;
-                if(time[person] >= info2[j].t)
+                if(time[person] == 0 || time[person] >= info2[j].t)
                     possible = false;
             }
 
