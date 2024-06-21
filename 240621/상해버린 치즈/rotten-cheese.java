@@ -20,32 +20,13 @@ class Person {
 
 public class Main {
     static int N, M, D, S;
+    static List<Person> Alist, Blist;
+    static List<Integer> answer = new ArrayList<>();
+
     public static void main(String[] args) {
-        // 여기에 코드를 작성해주세요.
-        Scanner sc = new Scanner(System.in);
+       
+        input();
 
-        N = sc.nextInt();
-        M = sc.nextInt();
-        D = sc.nextInt();
-        S = sc.nextInt();
-
-        List<Person> Alist = new ArrayList<>();
-
-        for(int i=0; i<D; i++) {
-            int p = sc.nextInt();
-            int c = sc.nextInt();
-            int t = sc.nextInt();
-
-            Alist.add(new Person(p,c,t));
-        }
-        List<Person> Blist = new ArrayList<>();
-
-        for(int i=0; i<S; i++) {
-            int p = sc.nextInt();
-            int t = sc.nextInt();
-
-            Blist.add(new Person(p,t));
-        }
 
         List<Person> res = new ArrayList<>();
         for(int i=0; i<D; i++) {
@@ -88,7 +69,10 @@ public class Main {
             int num = (int) iter.next();
             int cnt = 0;
             for (int i=0; i<D; i++) {
-                if (Alist.get(i).eatCheeseNumber == num) cnt++;
+                if (Alist.get(i).eatCheeseNumber == num && !answer.contains(Alist.get(i).personNumber)) {
+                    answer.add(Alist.get(i).personNumber);
+                    cnt++;
+                }
             }
             ans = Math.max(ans, cnt);
         }
@@ -96,5 +80,33 @@ public class Main {
         System.out.println(ans);
 
 
+    }
+
+    private static void input() {
+        // 여기에 코드를 작성해주세요.
+        Scanner sc = new Scanner(System.in);
+
+        N = sc.nextInt();
+        M = sc.nextInt();
+        D = sc.nextInt();
+        S = sc.nextInt();
+
+        Alist = new ArrayList<>();
+        Blist = new ArrayList<>();
+
+        for(int i=0; i<D; i++) {
+            int p = sc.nextInt();
+            int c = sc.nextInt();
+            int t = sc.nextInt();
+
+            Alist.add(new Person(p,c,t));
+        }
+
+        for(int i=0; i<S; i++) {
+            int p = sc.nextInt();
+            int t = sc.nextInt();
+
+            Blist.add(new Person(p,t));
+        }
     }
 }
