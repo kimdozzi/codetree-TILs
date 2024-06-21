@@ -27,60 +27,47 @@ public class Main {
        
         input();
 
+        int ans = 0;
 
-        List<Person> res = new ArrayList<>();
-        for(int i=0; i<D; i++) {
-            Person eatPerson = Alist.get(i);
-            for(int j=0; j<S; j++) {
-                Person hurtPerson = Blist.get(j);
-                if(hurtPerson.personNumber == eatPerson.personNumber && hurtPerson.time > eatPerson.time)
-                    res.add(eatPerson);
+        // 하나의 치즈가 상했을 때 필요한 약의 수의 최대값 구하기
+
+        for(int i=1; i<=m; i++) {
+            // i번 치즈가 상했을 때 필요한 약의 수의 최대값 
+
+            // time 배열을 만들어 각 사람이 언제 치즈를 먹었는지 저장
+            int[] time = new int[51];
+            for(int j=0; j<d; j++) {
+                if(Alist.eatCheeseNumber != i) continue;
+
+                // person이 i번째 치즈를 처음 먹었거나 이전보다 더 빨리 먹게 된 경우 time배열을 갱신
+                int person = Alist[j].personNumber;
+                if(time[person] == 0 || time[person] > Alist[j].time)
+                    time[person] = Alist[j].time;
             }
-        }
-        for(int i=0; i<res.size(); i++){
-            // System.out.println(res.get(i).personNumber + " " + res.get(i).eatCheeseNumber + " " + res.get(i).time);
-        }
 
-        HashSet<Integer> set = new HashSet<>();
-        if (res.size() == 1) {
-            set.add(res.get(0).eatCheeseNumber);
-        }
-        else {
-            for(int i=0; i<res.size(); i++) {
-                Person A = res.get(i);
-                boolean flag = false;
-                for(int j=0; j<res.size(); j++) {
-                    if(i==j) continue;
+            // possible: i번째 치즈가 상했을 수 있으면 true, 아니면 false
+            boolean possible = true;
 
-                    Person B = res.get(j);
-                    if(A.personNumber == B.personNumber) continue;
+            for(int j=0; j<s; j++) {
+                int person = Blist[j].personNumber;
+                if(time[person] == 0 || time[person] >= Blist[j].time) 
+                    possible = false;
+            }
 
-                    if(A.eatCheeseNumber == B.eatCheeseNumber) {
-                        // System.out.println("Cheese: " + A.eatCheeseNumber);
-                        flag = true;
+            // 만약 i번째 치즈가 상했을 가능성이 있다면, 몇 개의 약이 필요한지 확인
+            int pill = 0;
+            if(possible) {
+                for (int j=1; j<=n; j++) {
+                    if(time[j] != 0) {
+                        pill++;
                     }
                 }
-                if(flag) set.add(A.eatCheeseNumber);
             }
+            ans = Math.max(ans,pill);
         }
-        int ans = 0;
-        Iterator iter = set.iterator();
-        while(iter.hasNext()) {
-            int num = (int) iter.next();
-            int cnt = 0;
-            for (int i=0; i<D; i++) {
-                if (Alist.get(i).eatCheeseNumber == num && !answer.contains(Alist.get(i).personNumber)) {
-                    answer.add(Alist.get(i).personNumber);
-                    cnt++;
-                }
-            }
-            ans = Math.max(ans, cnt);
-        }
-
-        System.out.println(ans);
-
-
+        System.out.print(ans);
     }
+
 
     private static void input() {
         // 여기에 코드를 작성해주세요.
