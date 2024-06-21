@@ -7,7 +7,6 @@ public class Main {
         int m = sc.nextInt();
         int k = sc.nextInt();
 
-        Sytem.out.println(Math.min(n, Math.min(m,k)));
-
+        System.out.println(Math.min(n, Math.min(m,k)));
     }
 }
