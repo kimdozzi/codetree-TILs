@@ -56,28 +56,32 @@ public class Main {
                     res.add(eatPerson);
             }
         }
-        // for(int i=0; i<res.size(); i++){
-        //     System.out.println(res.get(i).personNumber + " " + res.get(i).eatCheeseNumber + " " + res.get(i).time);
-        // }
-
-        HashSet<Integer> set = new HashSet<>();
-        for(int i=0; i<res.size(); i++) {
-            Person A = res.get(i);
-            boolean flag = false;
-            for(int j=0; j<res.size(); j++) {
-                if(i==j) continue;
-
-                Person B = res.get(j);
-                if(A.personNumber == B.personNumber) continue;
-
-                if(A.eatCheeseNumber == B.eatCheeseNumber) {
-                    // System.out.println("Cheese: " + A.eatCheeseNumber);
-                    flag = true;
-                }
-            }
-            if(flag) set.add(A.eatCheeseNumber);
+        for(int i=0; i<res.size(); i++){
+            // System.out.println(res.get(i).personNumber + " " + res.get(i).eatCheeseNumber + " " + res.get(i).time);
         }
 
+        HashSet<Integer> set = new HashSet<>();
+        if (res.size() == 1) {
+            set.add(res.get(0).eatCheeseNumber);
+        }
+        else {
+            for(int i=0; i<res.size(); i++) {
+                Person A = res.get(i);
+                boolean flag = false;
+                for(int j=0; j<res.size(); j++) {
+                    if(i==j) continue;
+
+                    Person B = res.get(j);
+                    if(A.personNumber == B.personNumber) continue;
+
+                    if(A.eatCheeseNumber == B.eatCheeseNumber) {
+                        // System.out.println("Cheese: " + A.eatCheeseNumber);
+                        flag = true;
+                    }
+                }
+                if(flag) set.add(A.eatCheeseNumber);
+            }
+        }
         int ans = 0;
         Iterator iter = set.iterator();
         while(iter.hasNext()) {
