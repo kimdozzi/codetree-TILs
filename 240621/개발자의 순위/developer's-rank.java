@@ -1,69 +1,56 @@
-import java.util.*;
-import java.io.*;
-
-class Pair {
-    int x;
-    int y;
-    public Pair(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-}
+import java.util.Scanner;
 
 public class Main {
-    static int k,n;
-    static int[][] person;
-    static Set<Pair> set = new HashSet<>();
-    public static void main(String[] args) throws IOException{
-        // 여기에 코드를 작성해주세요.
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
+    public static final int MAX_K = 10;
+    public static final int MAX_N = 20;
+    
+    public static int k, n;
+    public static int[][] arr = new int[MAX_K][MAX_N];
 
-        k = Integer.parseInt(st.nextToken());
-        n = Integer.parseInt(st.nextToken());
-        person = new int[n+1][n+1];
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        // 입력
+        k = sc.nextInt();
+        n = sc.nextInt();
+        
+        for(int i = 0; i < k; i++)
+            for(int j = 0; j < n; j++)
+                arr[i][j] = sc.nextInt();
 
-        for(int i=1; i<=k; i++) {
-            st = new StringTokenizer(br.readLine());
-            for(int j=1; j<=n; j++) {
-                person[i][j] = Integer.parseInt(st.nextToken());
-            }
-        }
+        int ans = 0;
 
-        // for(int i=1; i<=k; i++) {
-        //     for(int j=1; j<=n; j++) {
-        //         System.out.print(person[i][j]+ " ");
-        //     }
-        //     System.out.println();
-        // }
+        // 모든 쌍에 대해서 불변의 순위인 쌍을 찾습니다.
+        for(int i = 1; i <= n; i++)
+            for(int j = 1; j <= n; j++) {
+                // i번 개발자가 j번 개발자보다 항상 높은 순위인지 여부를 확인합니다.
 
-        // i번째 개발자보다 항상 높은 개발자 찾기 
-        for(int i=1; i<=n; i++) {
-            int[] arr = new int[n+1];
-            List<Integer> highPerson = new ArrayList<>();
-            
-            
-            for(int x=1; x<=k; x++) {
-                for(int y=1; y<=n; y++) {
-                    // 자기 자신의 순위가 오면 루프 탈출 
-                    if (i==person[x][y]) break;
-                    highPerson.add(person[x][y]);
+                // i와 j가 같을 경우 넘어갑니다.
+                if(i == j)
+                    continue;
+                
+                // correct : i번 개발자가 j번 개발자보다 항상 높은 순위일때 true
+                boolean correct = true;
+
+                // k번의 모든 경기에 대해서 두 개발자의 위치를 찾고,
+                // 하나라도 i번 개발자가 더 뒤에 있으면 correct를 false로 바꿉니다.
+                for(int x = 0; x < k; x++) {
+                    int indexI = 0, indexJ = 0;
+
+                    for(int y = 0; y < n; y++) {
+                        if(arr[x][y] == i)
+                            indexI = y;
+                        if(arr[x][y] == j)
+                            indexJ = y;
+                    }
+
+                    if(indexI > indexJ)
+                        correct = false;
                 }
-            }
 
-            // i번 개발자보다 높은 순위였던 개발자들의 번호 갱신 
-            for(int j=0; j<highPerson.size(); j++) {
-                arr[highPerson.get(j)] += 1;
+                if(correct)
+                    ans++;
             }
-
-            // 그 중에서 k번 모두 자신을 이겼다면 set에 저장
-            for(int j=0; j<arr.length; j++) {
-                if(arr[j] == k) {
-                    if(!set.contains(new HashSet<>(i,arr[j])))
-                        set.add(new Pair(i, arr[j]));
-                }
-            }
-        }
-        System.out.print(set.size());
+        
+        System.out.print(ans);
     }
 }
