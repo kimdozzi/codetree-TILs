@@ -73,6 +73,8 @@ public class Main {
 			originalHp[i] = k;
 		}
 
+		drawMap();
+
 		for (int t = 1; t <= Q; t++) {
 			st = new StringTokenizer(br.readLine());
 			int idx = Integer.parseInt(st.nextToken()); // 명령을 받은 기사의 번호
@@ -83,7 +85,7 @@ public class Main {
 				continue;
 
 			// 1. 시작 시, 생존한 기사들의 정보를 map에 그립니다.
-			drawMap();
+			
 
 			// 이동하기 전, 기사들의 위치 정보를 담아줍니다.
 			// 그 이유는 최종적인 이동을 실패하였을 경우, 되돌아가기 위함입니다.
