@@ -77,7 +77,6 @@ public class Main {
 			st = new StringTokenizer(br.readLine());
 			int idx = Integer.parseInt(st.nextToken()); // 명령을 받은 기사의 번호
 			int d = Integer.parseInt(st.nextToken()); // 기사가 이동할 방향 정보
-			// System.out.println(idx + "번 기사 명령 : 방향 -> " + d);
 
 			// 0. 죽은 사람이라면 더 이상 진행하지 않습니다.
 			if (isDead(idx))
@@ -85,8 +84,6 @@ public class Main {
 
 			// 1. 시작 시, 생존한 기사들의 정보를 map에 그립니다.
 			drawMap();
-			// print(board);
-			// System.out.println();
 
 			// 이동하기 전, 기사들의 위치 정보를 담아줍니다.
 			// 그 이유는 최종적인 이동을 실패하였을 경우, 되돌아가기 위함입니다.
@@ -111,6 +108,7 @@ public class Main {
 			}
 			// 이동에 성공했다면, 업데이트 된 맵을 그림.
 			else {
+				
 				updatePosition(prevPos);
 			}
 
@@ -186,9 +184,6 @@ public class Main {
 	}
 
 	private static void damage(int exceptIdx) {
-		// print(board);
-		// System.out.println();
-		// print(trap);
 
 		for (int i = 0; i < L; i++) {
 			for (int j = 0; j < L; j++) {
@@ -222,9 +217,6 @@ public class Main {
 				}
 			}
 		}
-		// System.out.println("이전 좌표를 지운 보드");
-		// print(board);
-		// System.out.println();
 		for (int i = 1; i <= N; i++) {
 			if (isDead(i))
 				continue;
@@ -232,14 +224,10 @@ public class Main {
 			int sy = pos[i][1];
 			for (int x = sx; x < sx + size[i][0]; x++) {
 				for (int y = sy; y < sy + size[i][1]; y++) {
-					// System.out.println("새로운 좌표 : " + x + " " + y + " : " + i);
 					board[x][y] = i; // 새로운 좌표로 갱신
 				}
 			}
 		}
-		// System.out.println("갱신 좌표를 적용한 보드");
-		// print(board);
-		// System.out.println();
 	}
 
 	private static boolean rec_func(int idx, int d) {
@@ -247,7 +235,6 @@ public class Main {
 		int y = pos[idx][1]; // 기존 y 좌표
 		int nx = x + dirs[d][0]; // 이동하려는 x 좌표
 		int ny = y + dirs[d][1]; // 이동하려는 y 좌표
-		// System.out.println(x + " " + y + " -> " + nx + " " + ny);
 		if (!inRange(nx, ny))
 			return false;
 
@@ -282,10 +269,11 @@ public class Main {
 
 		// 해당 공간에 위치한 기사들을 for문을 반복해 연쇄로 밀어주기.
 		for (int i = 0; i < peopleList.size(); i++) {
-			if (onePush[i])
+			int num = peopleList.get(i);
+			if (onePush[num])
 				continue;
-			onePush[i] = true;
-			boolean isAvailable = rec_func(peopleList.get(i), d);
+			onePush[num] = true;
+			boolean isAvailable = rec_func(num, d);
 			if (!isAvailable)
 				return false;
 		}
