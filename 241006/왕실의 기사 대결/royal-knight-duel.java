@@ -231,8 +231,9 @@ public class Main {
 
 		int nx = x + dirs[d][0]; // 이동하려는 x 좌표
 		int ny = y + dirs[d][1]; // 이동하려는 y 좌표
-		
-		if (!inRange(nx,ny)) return false;
+
+		if (!inRange(nx, ny))
+			return false;
 
 		// System.out.println(x + " " + y + " -> " + nx + " " + ny);
 
@@ -240,8 +241,7 @@ public class Main {
 
 		for (int i = nx; i < nx + size[idx][0]; i++) { // 이동하려는 위치에 기사가 자신의 크기를 차지했을 때
 			for (int j = ny; j < ny + size[idx][1]; j++) {
-				if (i == -1 || j == -1)
-					break;
+				if (!inRange(i,j)) return false;
 				int num = board[i][j];
 				if (num == idx)
 					continue; // 자기 자신일 경우 continue.
