@@ -231,6 +231,8 @@ public class Main {
 
 		int nx = x + dirs[d][0]; // 이동하려는 x 좌표
 		int ny = y + dirs[d][1]; // 이동하려는 y 좌표
+		
+		if (!inRange(nx,ny)) return false;
 
 		// System.out.println(x + " " + y + " -> " + nx + " " + ny);
 
@@ -273,6 +275,10 @@ public class Main {
 		pos[idx][0] = nx;
 		pos[idx][1] = ny;
 		return true;
+	}
+
+	private static boolean inRange(int nx, int ny) {
+		return 0 <= nx && nx < L && 0 <= ny && ny < L;
 	}
 
 	private static void print(int[][] board) {
