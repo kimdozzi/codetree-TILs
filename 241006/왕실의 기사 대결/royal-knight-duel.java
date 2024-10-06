@@ -13,6 +13,7 @@ public class Main {
 	static int[] originalHp; // 기사들의 처음 체력 정보
 	static boolean[] alive; // 기사들의 생존 여부
 	static boolean[] pushStatus; // 기사들의 밀린 여부
+	static boolean[] onePush; // 1번만 밀기 위한 상태 배열
 	static int[][] pos; // 각 인덱스에 해당하는 기사들의 좌표정보를 다룸.(좌상단 기준)
 	static int[][] size;
 	static int[][] dirs = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
@@ -31,6 +32,7 @@ public class Main {
 		hp = new int[N + 1];
 		originalHp = new int[N + 1];
 		alive = new boolean[N + 1];
+		onePush = new boolean[N + 1];
 		pushStatus = new boolean[N + 1];
 		pos = new int[N + 1][2];
 		size = new int[N + 1][2];
@@ -71,62 +73,55 @@ public class Main {
 			originalHp[i] = k;
 		}
 
-		for (int i = 1; i <= N; i++) {
-			int sx = pos[i][0];
-			int sy = pos[i][1];
-			for (int x = sx; x < sx + size[i][0]; x++) {
-				for (int y = sy; y < sy + size[i][1]; y++) {
-					board[x][y] = i;
-				}
-			}
-		}
-
 		for (int t = 1; t <= Q; t++) {
 			st = new StringTokenizer(br.readLine());
 			int idx = Integer.parseInt(st.nextToken()); // 명령을 받은 기사의 번호
 			int d = Integer.parseInt(st.nextToken()); // 기사가 이동할 방향 정보
-			// System.out.println(idx + "번 기사 명령 받음 : 방향 -> " + d);
+			// System.out.println(idx + "번 기사 명령 : 방향 -> " + d);
 
-			// 죽은 사람이라면 넘어감.
-			if (!alive[idx])
+			// 0. 죽은 사람이라면 더 이상 진행하지 않습니다.
+			if (isDead(idx))
 				continue;
 
-			// 이동하기 전 기사들의 위치 정보
+			// 1. 시작 시, 생존한 기사들의 정보를 map에 그립니다.
+			drawMap();
+			// print(board);
+			// System.out.println();
+
+			// 이동하기 전, 기사들의 위치 정보를 담아줍니다.
+			// 그 이유는 최종적인 이동을 실패하였을 경우, 되돌아가기 위함입니다.
 			int[][] prevPos = new int[N + 1][2];
 			for (int i = 1; i <= N; i++) {
+				if (isDead(i))
+					continue;
 				prevPos[i] = pos[i].clone();
 			}
 
 			boolean isMove = rec_func(idx, d);
-			// System.out.println("움직임 성공 여부 : " + isMove);
-			// System.out.println();
+
 			// 만약 이동에 실패했다면, 이전 위치 복귀
 			if (!isMove) {
+				initPushStatus(); // pushStatus 배열 초기화.
+
+				// 이전 위치 정보로 다시 되돌림.
 				for (int i = 1; i <= N; i++) {
 					pos[i] = prevPos[i].clone();
-					pushStatus[i] = false;
 				}
 				continue;
-			} else {
+			}
+			// 이동에 성공했다면, 업데이트 된 맵을 그림.
+			else {
 				updatePosition(prevPos);
 			}
 
-			// print(board);
-			for (int i = 1; i <= N; i++) {
-				// System.out.println(i + "번 기사의 현재 좌표 : : (" + pos[i][0] + " " + pos[i][1] + ")");
-			}
-
+			// 밀린 기사들에 대해서만 데미지 부여.
 			damage(idx);
 
+			// 기사들이 살아있는 지 여부를 확인. 죽었다면 처리.
 			isAlive();
 
-			for (int i = 1; i <= N; i++) {
-				pushStatus[i] = false;
-			}
-
-			// System.out.println("각 턴이 끝난 최종 보드");
-			// print(board);
-			// System.out.println();
+			// 밀었던 기사들의 상태 정보 초기화.
+			initPushStatus();
 		}
 
 		for (int i = 1; i <= N; i++) {
@@ -137,13 +132,42 @@ public class Main {
 		System.out.println(answer);
 	}
 
+	private static void initPushStatus() {
+		for (int i = 1; i <= N; i++) {
+			pushStatus[i] = false;
+			onePush[i] = false;
+		}
+	}
+
+	private static boolean isDead(int idx) {
+		return !alive[idx];
+	}
+
+	private static void drawMap() {
+		for (int i = 1; i <= N; i++) {
+			if (isDead(i))
+				continue; // 죽은 사람은 그리지 않음.
+
+			int sx = pos[i][0];
+			int sy = pos[i][1];
+			for (int x = sx; x < sx + size[i][0]; x++) {
+				for (int y = sy; y < sy + size[i][1]; y++) {
+					board[x][y] = i;
+				}
+			}
+		}
+	}
+
 	private static void isAlive() {
 		List<Integer> deadPeople = new ArrayList<>();
 
+		// 살아있는 기사들에 대해 hp 정보 확인.
 		for (int i = 1; i <= N; i++) {
-			if (hp[i] <= 0) { // 기사가 죽었다면
-				alive[i] = false; // 죽은 사람 표시 남김.
-				deadPeople.add(i);
+			if (isDead(i))
+				continue;
+			if (hp[i] <= 0) { // 해당 기사가 죽었다면 죽은 사람 표시 남김.
+				alive[i] = false;
+				deadPeople.add(i); // 죽은 기사 정보를 가지는 리스트에 저장.
 			}
 		}
 
@@ -162,26 +186,20 @@ public class Main {
 	}
 
 	private static void damage(int exceptIdx) {
-		// System.out.println("현재 트랩 위치 ");
-
-		// for (int i = 0; i < L; i++) {
-		// 	for (int j = 0; j < L; j++) {
-		// 		System.out.print(trap[i][j] + " ");
-		// 	}
-		// 	System.out.println();
-		// }
+		// print(board);
 		// System.out.println();
+		// print(trap);
 
 		for (int i = 0; i < L; i++) {
 			for (int j = 0; j < L; j++) {
+
+				// 해당 좌표에 기사가 존재하고, 트랩이 있을 경우
 				if (board[i][j] > 0 && trap[i][j] == 1) {
-					if (board[i][j] == exceptIdx)
+					if (board[i][j] == exceptIdx) // 자기 자신(명령을 받은 기사)일 경우 넘어감.
 						continue;
-					if (pushStatus[board[i][j]]) {
+					if (pushStatus[board[i][j]]) { // 밀린 기사일 경우 데미지 부여.
 						hp[board[i][j]]--;
 					}
-					// System.out.println("데미지 받는 기사 번호 : " + board[i][j]);
-
 				}
 			}
 		}
@@ -194,7 +212,7 @@ public class Main {
 
 	private static void updatePosition(int[][] prevPos) {
 		for (int i = 1; i <= N; i++) {
-			if (!alive[i])
+			if (isDead(i))
 				continue;
 			int px = prevPos[i][0];
 			int py = prevPos[i][1];
@@ -207,9 +225,8 @@ public class Main {
 		// System.out.println("이전 좌표를 지운 보드");
 		// print(board);
 		// System.out.println();
-
 		for (int i = 1; i <= N; i++) {
-			if (!alive[i])
+			if (isDead(i))
 				continue;
 			int sx = pos[i][0];
 			int sy = pos[i][1];
@@ -228,30 +245,29 @@ public class Main {
 	private static boolean rec_func(int idx, int d) {
 		int x = pos[idx][0]; // 기존 x 좌표
 		int y = pos[idx][1]; // 기존 y 좌표
-
 		int nx = x + dirs[d][0]; // 이동하려는 x 좌표
 		int ny = y + dirs[d][1]; // 이동하려는 y 좌표
-
+		// System.out.println(x + " " + y + " -> " + nx + " " + ny);
 		if (!inRange(nx, ny))
 			return false;
 
-		// System.out.println(x + " " + y + " -> " + nx + " " + ny);
-
 		List<Integer> peopleList = new ArrayList<>();
-
 		for (int i = nx; i < nx + size[idx][0]; i++) { // 이동하려는 위치에 기사가 자신의 크기를 차지했을 때
 			for (int j = ny; j < ny + size[idx][1]; j++) {
-				if (!inRange(i,j)) return false;
-				int num = board[i][j];
-				if (num == idx)
-					continue; // 자기 자신일 경우 continue.
 
-				if (num != 0) { // 빈공간이 아닐 때
+				if (!inRange(i, j)) // 격자를 벗어나는 크기이면 종료.
+					return false;
+
+				int num = board[i][j]; // 해당 위치의 기사의 번호를 num에 저장.
+				if (num == idx) // 자기 자신일 경우 continue.
+					continue;
+
+				if (num != 0) { // 이동하려는 곳이 빈 공간이 아닐 때
 					if (num == -1) { // 벽이라면 이동할 수 없으므로 이동을 종료.
 						return false;
 					} else { // 다른 기사가 해당 위치에 존재한다면
 						peopleList.add(num); // 연쇄로 밀어주기 위해 리스트에 삽입.
-						pushStatus[num] = true;
+						pushStatus[num] = true; // 해당 기사를 밀었는지 여부를 확인하기 위한 배열.
 					}
 				}
 			}
@@ -266,6 +282,9 @@ public class Main {
 
 		// 해당 공간에 위치한 기사들을 for문을 반복해 연쇄로 밀어주기.
 		for (int i = 0; i < peopleList.size(); i++) {
+			if (onePush[i])
+				continue;
+			onePush[i] = true;
 			boolean isAvailable = rec_func(peopleList.get(i), d);
 			if (!isAvailable)
 				return false;
