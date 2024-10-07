@@ -113,8 +113,8 @@ public class Main {
 		boolean isExistEntrance = false;
 
 		while (size <= 10) {
-			for (int i = 0; i < N - size; i++) {
-				for (int j = 0; j < N - size; j++) {
+			for (int i = 0; i < N - size + 1; i++) {
+				for (int j = 0; j < N - size + 1; j++) {
 					for (int r = i; r < i + size; r++) {
 						for (int c = j; c < j + size; c++) {
 							if (board[r][c] == -1) {
