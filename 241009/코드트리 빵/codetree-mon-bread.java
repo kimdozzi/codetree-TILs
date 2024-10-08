@@ -1,5 +1,3 @@
-package 삼성문제유형.코드트리빵_2022_하_오후1번;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
