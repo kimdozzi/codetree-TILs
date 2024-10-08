@@ -80,7 +80,7 @@ public class Main {
 			people[i] = new Pair(-1, -1);
 		}
 
-		while (true) {
+		while (time <= 10) {
 			time++;
 
 			// 1. 격자에 있는 사람들 모두 본인이 가고 싶은 편의점 방향으로 1칸 이동
@@ -99,79 +99,69 @@ public class Main {
 				Pair pair = willNotUse.poll();
 				cannotMove[pair.x][pair.y] = true;
 			}
+
+
 		}
 
 		System.out.println(time);
 	}
 
 	private static void goBaseCamp() {
-		boolean[][] visit;
+		List<Camp> shortestCamp = new ArrayList<>();
+		boolean[][] visit = new boolean[N][N];
 
-		for (int i = 1; i <= M; i++) {
-			visit = new boolean[N][N];
-			List<Camp> shortestCamp = new ArrayList<>();
+		// 현재 시간이 t분이고 t <= m을 만족한다면
+		if (time <= M) {
 
-			// 현재 시간이 t분이고 t <= m을 만족한다면
-			if (time <= i) {
+			//t번 사람은 자신이 가고 싶은 편의점과 가장 가까운 베이스 캠프로 이동.
+			Pair marketPos = markets[time];
+			Queue<Camp> q = new LinkedList<>();
+			q.add(new Camp(marketPos.x, marketPos.y, 0));
+			visit[marketPos.x][marketPos.y] = true;
 
-				//t번 사람은 자신이 가고 싶은 편의점과 가장 가까운 베이스 캠프로 이동.
-				Pair marketPos = markets[time];
-				// Queue<Camp> q = new LinkedList<>();
-				// q.add(new Camp(marketPos.x, marketPos.y, 0));
-				// visit[marketPos.x][marketPos.y] = true;
+			while (!q.isEmpty()) {
+				Camp camp = q.poll();
+				int x = camp.x;
+				int y = camp.y;
 
-				for (int c = 0; c < campList.size(); c++) {
-					Pair pair = campList.get(c);
-					if (cannotMove[pair.x][pair.y])
-						continue;
-					int dist = Math.abs(marketPos.x - pair.x) + Math.abs(marketPos.y - pair.y);
-					shortestCamp.add(new Camp(pair.x, pair.y, dist));
+				// 해당 위치가 베이스캠프라면 가까운 캠프의 후보지에 넣음.
+				if (board[x][y] == 1) {
+					shortestCamp.add(new Camp(x, y, camp.dist));
+					continue;
 				}
 
-				// while (!q.isEmpty()) {
-				// 	Camp camp = q.poll();
-				// 	int x = camp.x;
-				// 	int y = camp.y;
-				//
-				// 	// 해당 위치가 베이스캠프라면 가까운 캠프의 후보지에 넣음.
-				// 	if (board[x][y] == 1) {
-				// 		shortestCamp.add(new Camp(x, y, camp.dist));
-				// 		continue;
-				// 	}
-				//
-				// 	for (int d = 0; d < 4; d++) {
-				// 		int nx = x + dirs[d][0];
-				// 		int ny = y + dirs[d][1];
-				//
-				// 		if (!inRange(nx, ny))
-				// 			continue;
-				//
-				// 		if (visit[nx][ny])
-				// 			continue;
-				//
-				// 		if (cannotMove[nx][ny])
-				// 			continue;
-				//
-				// 		visit[nx][ny] = true;
-				// 		q.add(new Camp(nx, ny, camp.dist + 1));
-				// 	}
-				// }
+				for (int d = 0; d < 4; d++) {
+					int nx = x + dirs[d][0];
+					int ny = y + dirs[d][1];
 
-				// 우선순위에 맞게 정렬.
-				Collections.sort(shortestCamp);
+					if (!inRange(nx, ny))
+						continue;
 
-				// 가장 가까운 베이스 캠프를 구함.
-				Camp camp = shortestCamp.get(0);
+					if (visit[nx][ny])
+						continue;
 
-				willNotUse.add(new Pair(camp.x, camp.y));
-				people[time].x = camp.x;
-				people[time].y = camp.y;
+					if (cannotMove[nx][ny])
+						continue;
 
-				// for (int p = 0; p < shortestCamp.size(); p++) {
-				// 	Camp camp = shortestCamp.get(p);
-				// 	System.out.println(camp.x + " " + camp.y + " " + camp.dist);
-				// }
+					visit[nx][ny] = true;
+					q.add(new Camp(nx, ny, camp.dist + 1));
+				}
 			}
+
+			// 우선순위에 맞게 정렬.
+			Collections.sort(shortestCamp);
+
+			// 가장 가까운 베이스 캠프를 구함.
+			Camp camp = shortestCamp.get(0);
+
+			people[time].x = camp.x;
+			people[time].y = camp.y;
+			cannotMove[camp.x][camp.y] = true;
+
+			// for (int p = 0; p < shortestCamp.size(); p++) {
+			// 	Camp camp = shortestCamp.get(p);
+			// 	System.out.println(camp.x + " " + camp.y + " " + camp.dist);
+			// }
 		}
 	}
 
@@ -182,8 +172,8 @@ public class Main {
 			Pair person = people[i];
 
 			if (market.x == person.x && market.y == person.y) {
-				willNotUse.add(new Pair(market.x, market.y));
 				cnt++;
+				cannotMove[market.x][market.y] = true;
 			}
 		}
 
