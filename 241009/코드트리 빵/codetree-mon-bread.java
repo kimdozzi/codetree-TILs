@@ -80,7 +80,7 @@ public class Main {
 			people[i] = new Pair(-1, -1);
 		}
 
-		while (time <= 100) {
+		while (true) {
 			time++;
 
 			// 1. 격자에 있는 사람들 모두 본인이 가고 싶은 편의점 방향으로 1칸 이동
