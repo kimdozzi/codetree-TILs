@@ -78,7 +78,7 @@ public class Main {
 
 			// 격자를 벗어나는 경우, 정반대 방향으로 방향을 바꾸어 1칸 이동.
 			if (!inRange(nx, ny)) {
-				player.d = (player.d < 2) ? (player.d+2) : (player.d-2);
+				player.d = (player.d + 2) % 4;
 				nx = x + dirs[player.d][0];
 				ny = y + dirs[player.d][1];
 			}
@@ -107,8 +107,8 @@ public class Main {
 
 				for (int d = 0; d < 4; d++) {
 					int newD = (loserPlayer.d + d) % 4;
-					int lnx = lx + dirs[newD % 4][0];
-					int lny = ly + dirs[newD % 4][1];
+					int lnx = lx + dirs[newD][0];
+					int lny = ly + dirs[newD][1];
 
 					if (!inRange(lnx, lny))
 						continue;
@@ -127,6 +127,13 @@ public class Main {
 						playerBoard[lx][ly] = 0;
 						// 새로운 곳으로 갱신.
 						playerBoard[loserPlayer.x][loserPlayer.y] = loser;
+
+						Collections.sort(board[loserPlayer.x][loserPlayer.y]);
+						int newGun = board[loserPlayer.x][loserPlayer.y].get(board[loserPlayer.x][loserPlayer.y].size()-1);
+						loserPlayer.hasGun = true;
+						loserPlayer.gunDamage = newGun;
+						board[loserPlayer.x][loserPlayer.y].set(board[loserPlayer.x][loserPlayer.y].size()-1, 0);
+						
 						break;
 					}
 				}
