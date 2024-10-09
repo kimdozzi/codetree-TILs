@@ -78,7 +78,7 @@ public class Main {
 
 			// 격자를 벗어나는 경우, 정반대 방향으로 방향을 바꾸어 1칸 이동.
 			if (!inRange(nx, ny)) {
-				player.d = (player.d + 2) % 4;
+				player.d = (player.d < 2) ? (d+2) : (d-2);
 				nx = x + dirs[player.d][0];
 				ny = y + dirs[player.d][1];
 			}
