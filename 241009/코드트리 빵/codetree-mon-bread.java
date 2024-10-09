@@ -193,7 +193,6 @@ public class Main {
 
 			Queue<Pair> q = new LinkedList<>();
 			boolean[][] vis = new boolean[N][N];
-			int[][] distance = new int[N][N];
 			Pair[][] parent = new Pair[N][N];
 
 			q.add(new Pair(x, y));
@@ -221,7 +220,6 @@ public class Main {
 
 					q.offer(new Pair(nx, ny));
 					vis[nx][ny] = true;
-					distance[nx][ny] = distance[current.x][current.y] + 1;
 					parent[nx][ny] = current;
 				}
 			}
