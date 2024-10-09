@@ -151,7 +151,7 @@ public class Main {
 		Tree StartTree = treeBoard[sx][sy];
 		int x = StartTree.x;
 		int y = StartTree.y;
-		sprayBoard[x][y] = C;
+		sprayBoard[x][y] = C+1;
 
 		for (int d = 0; d < 4; d++) {
 			int nx = x;
@@ -166,7 +166,7 @@ public class Main {
 				if (board[nx][ny] == WALL)
 					break;
 
-				sprayBoard[nx][ny] = C;
+				sprayBoard[nx][ny] = C+1;
 			}
 		}
 	}
