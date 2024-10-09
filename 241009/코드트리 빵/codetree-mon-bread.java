@@ -204,7 +204,7 @@ public class Main {
 				if (current.x == ex && current.y == ey) {
 					Pair next = current;
 					while (parent[next.x][next.y] != null && (
-						parent[next.x][next.y].x != x || parent[next.x][next.y].y != y)) {
+						parent[next.x][next.y].x != x && parent[next.x][next.y].y != y)) {
 						next = parent[next.x][next.y];
 					}
 					people[idx] = next;
@@ -218,7 +218,7 @@ public class Main {
 					if (!inRange(nx, ny) || vis[nx][ny] || cannotMove[nx][ny])
 						continue;
 
-					q.offer(new Pair(nx, ny));
+					q.add(new Pair(nx, ny));
 					vis[nx][ny] = true;
 					parent[nx][ny] = current;
 				}
