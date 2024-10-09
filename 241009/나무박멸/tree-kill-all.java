@@ -1,5 +1,3 @@
-package 삼성문제유형.나무박멸_2022_상_오후2번;
-
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
