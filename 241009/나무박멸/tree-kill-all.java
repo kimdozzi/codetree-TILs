@@ -1,3 +1,5 @@
+package 삼성문제유형.나무박멸_2022_상_오후2번;
+
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
@@ -66,7 +68,8 @@ public class Main {
 
 		for (int t = 1; t <= M; t++) {
 			// 박멸 년 수를 1씩 감소합니다.
-			decrease();
+			if (t > 1)
+				decrease();
 
 			// 나무가 있는 좌표를 구합니다.
 			findTree();
@@ -75,7 +78,9 @@ public class Main {
 			update();
 
 			// 제초제 뿌리기
-			spray();
+			boolean canSpay = spray();
+			if (!canSpay)
+				break;
 
 			// 제초된 나무들을 정리합니다.
 			sprayUpdate();
@@ -97,19 +102,21 @@ public class Main {
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < N; j++) {
 				if (sprayBoard[i][j] > 0) {
-					board[i][j] = EMPTY;
 					if (treeBoard[i][j] != null) {
 						answer += treeBoard[i][j].cnt;
 						treeBoard[i][j] = null;
 					}
+					board[i][j] = EMPTY;
 				}
 			}
 		}
 	}
 
-	private static void spray() {
+	private static boolean spray() {
 		int MIN_N = Integer.MIN_VALUE;
 		int sx = -1, sy = -1;
+
+		boolean canSpray = false;
 
 		// 나무가 가장 많이 박멸되는 칸 찾기.
 		for (int i = 0; i < N; i++) {
@@ -147,11 +154,20 @@ public class Main {
 				}
 			}
 		}
+
+		if (!(sx == -1 && sy == -1)) {
+			canSpray = true;
+		}
+
+		if (!canSpray) {
+			return false;
+		}
+
 		// 박멸 시작.
 		Tree StartTree = treeBoard[sx][sy];
 		int x = StartTree.x;
 		int y = StartTree.y;
-		sprayBoard[x][y] = C+1;
+		sprayBoard[x][y] = C + 1;
 
 		for (int d = 0; d < 4; d++) {
 			int nx = x;
@@ -166,9 +182,11 @@ public class Main {
 				if (board[nx][ny] == WALL)
 					break;
 
-				sprayBoard[nx][ny] = C+1;
+				sprayBoard[nx][ny] = C + 1;
 			}
 		}
+
+		return true;
 	}
 
 	private static void update() {
@@ -181,18 +199,6 @@ public class Main {
 				}
 			}
 		}
-		// System.out.println("== 업데이트 후 board를 확인 ==");
-		// printBoard();
-	}
-
-	private static void printBoard() {
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N; j++) {
-				System.out.print(board[i][j] + " ");
-			}
-			System.out.println();
-		}
-		System.out.println();
 	}
 
 	private static void spread() {
@@ -271,10 +277,6 @@ public class Main {
 				if (board[nx][ny] == WALL || board[nx][ny] == EMPTY)
 					continue;
 
-				// 제초제가 뿌려진 칸이면 패스
-				if (sprayBoard[nx][ny] > 0)
-					continue;
-
 				if (board[nx][ny] == EXIST) {
 					growthCount++;
 				}
@@ -292,13 +294,6 @@ public class Main {
 
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < N; j++) {
-				// 벽이거나 나무가 없다면 패스
-				if (board[i][j] == WALL || board[i][j] == EMPTY)
-					continue;
-
-				// 제초제가 뿌려진 칸이면 패스
-				if (sprayBoard[i][j] > 0)
-					continue;
 
 				// 나무가 있는 칸이면
 				if (board[i][j] == EXIST) {
@@ -312,17 +307,6 @@ public class Main {
 
 		// 인접한 4개의 칸 중 벽, 다른 나무, 제초제가 없는 칸에서 번식 시작.
 		spread();
-
-		// for (int i = 0; i < N; i++) {
-		// 	for (int j = 0; j < N; j++) {
-		// 		if (treeBoard[i][j] != null)
-		// 			System.out.print(treeBoard[i][j].cnt + " ");
-		// 		else
-		// 			System.out.print("NULL ");
-		// 	}
-		// 	System.out.println();
-		// }
-		// System.out.println();
-
 	}
+
 }
