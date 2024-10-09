@@ -219,14 +219,10 @@ public class Main {
 		int winner = info[0];
 		int loser = info[1];
 
-		// 내가 졌다면
-		if (loser == idx) {
-			// 해당 플레이어는 포인트 얻음.
-			points[nearbyPlayerNumber] += nearbyAttack - myAttack;
-		} else {
-			// 내가 얻음.
-			points[idx] += myAttack - nearbyAttack;
-		}
+		Player winnerPlayer = players[winner];
+		Player loserPlayer = players[loser];
+
+		points[winner] += (winnerPlayer.gunDamage + winnerPlayer.s) - (loserPlayer.gunDamage + loserPlayer.s);
 		return new int[] {winner, loser};
 	}
 
