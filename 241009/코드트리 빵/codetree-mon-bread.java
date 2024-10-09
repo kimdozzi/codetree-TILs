@@ -203,7 +203,7 @@ public class Main {
 
 				if (current.x == ex && current.y == ey) {
 					Pair next = current;
-					while (parent[next.x][next.y] != null && (
+					while (parent[next.x][next.y] != null && !(
 						parent[next.x][next.y].x != x && parent[next.x][next.y].y != y)) {
 						next = parent[next.x][next.y];
 					}
