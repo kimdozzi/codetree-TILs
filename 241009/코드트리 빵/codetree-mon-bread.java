@@ -1,224 +1,175 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Scanner;
-
-class Pair {
-	int x;
-	int y;
-
-	public Pair(int x, int y) {
-		this.x = x;
-		this.y = y;
-	}
-}
-
-class Camp implements Comparable<Camp> {
-	int x;
-	int y;
-	int dist;
-
-	public Camp(int x, int y, int dist) {
-		this.x = x;
-		this.y = y;
-		this.dist = dist;
-	}
-
-	@Override
-	public int compareTo(Camp c) {
-		if (this.dist != c.dist)
-			return this.dist - c.dist;
-		if (this.x != c.x)
-			return this.x - c.x;
-		return this.y - c.y;
-	}
-}
-
+import java.util.*;
+import java.io.*;
 public class Main {
-	static int[][] dirs = {{-1, 0}, {0, -1}, {0, 1}, {1, 0}}; // 상 좌 우 하
-
-	static int N, M;
-	static int time;
-	static int[][] board;
-	static boolean[][] cannotMove; // 이동가능 격지인지 확인
-	static Pair[] people; // 사람들의 좌표 정보
-	static List<Pair> campList;
-	static Queue<Pair> willNotUse;
-	static Pair[] markets;
-
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		N = sc.nextInt();
-		M = sc.nextInt();
-
-		board = new int[N][N];
-		cannotMove = new boolean[N][N];
-		people = new Pair[M + 1];
-		markets = new Pair[M + 1];
-		campList = new ArrayList<>();
-		willNotUse = new LinkedList<>();
-
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N; j++) {
-				board[i][j] = sc.nextInt();
-				if (board[i][j] == 1) {
-					campList.add(new Pair(i, j));
-				}
-			}
-		}
-
-		for (int i = 1; i <= M; i++) {
-			int x = sc.nextInt() - 1;
-			int y = sc.nextInt() - 1;
-			markets[i] = new Pair(x, y);
-		}
-
-		// 초기에 사람들은 모두 격자 밖에 존재함.
-		for (int i = 0; i <= M; i++) {
-			people[i] = new Pair(-1, -1);
-		}
-
-		while (true) {
-			time++;
-
-			// 1. 격자에 있는 사람들 모두 본인이 가고 싶은 편의점 방향으로 1칸 이동
-			move();
-
-			// 2. 편의점에 도착여부 확인.
-			destination();
-
-			// 3. 베이스 캠프로 이동.
-			if (time <= M)
-				goBaseCamp();
-
-			int cnt = 0;
-			for (int i = 1; i <= M; i++) {
-				if (people[i].x == markets[i].x && people[i].y == markets[i].y)
-					cnt++;
-			}
-			if (cnt == M)
-				break;
-
-		}
-
-		System.out.println(time);
-	}
-
-	private static void goBaseCamp() {
-		List<Camp> shortestCamp = new ArrayList<>();
-		boolean[][] visit = new boolean[N][N];
-
-		// 현재 시간이 t분이고 t <= m을 만족한다면
-
-		//t번 사람은 자신이 가고 싶은 편의점과 가장 가까운 베이스 캠프로 이동.
-		Pair marketPos = markets[time];
-		Queue<Camp> q = new LinkedList<>();
-		q.add(new Camp(marketPos.x, marketPos.y, 0));
-		visit[marketPos.x][marketPos.y] = true;
-
-		while (!q.isEmpty()) {
-			Camp camp = q.poll();
-			int x = camp.x;
-			int y = camp.y;
-
-			// 해당 위치가 베이스캠프라면 가까운 캠프의 후보지에 넣음.
-			if (board[x][y] == 1) {
-				shortestCamp.add(new Camp(x, y, camp.dist));
-				continue;
-			}
-
-			for (int d = 0; d < 4; d++) {
-				int nx = x + dirs[d][0];
-				int ny = y + dirs[d][1];
-
-				if (!inRange(nx, ny))
-					continue;
-
-				if (visit[nx][ny])
-					continue;
-
-				if (cannotMove[nx][ny])
-					continue;
-
-				visit[nx][ny] = true;
-				q.add(new Camp(nx, ny, camp.dist + 1));
-			}
-		}
-
-		// 우선순위에 맞게 정렬.
-		Collections.sort(shortestCamp);
-
-		// 가장 가까운 베이스 캠프를 구함.
-		Camp camp = shortestCamp.get(0);
-
-		people[time].x = camp.x;
-		people[time].y = camp.y;
-		cannotMove[camp.x][camp.y] = true;
-
-		// for (int p = 0; p < shortestCamp.size(); p++) {
-		// 	Camp camp = shortestCamp.get(p);
-		// 	System.out.println(camp.x + " " + camp.y + " " + camp.dist);
-		// }
-	}
-
-	private static void destination() {
-
-		for (int i = 1; i <= M; i++) {
-			Pair market = markets[i];
-			Pair person = people[i];
-
-			if (cannotMove[market.x][market.y])
-				continue;
-
-			if (market.x == person.x && market.y == person.y) {
-				cannotMove[market.x][market.y] = true;
-			}
-		}
-	}
-
-	private static void move() {
-		// 모든 사람들의 좌표를 살펴보고, 격자 내에 존재한다면 1칸 이동.
-		for (int idx = 1; idx <= M; idx++) {
-			Pair person = people[idx];
-			int x = person.x;
-			int y = person.y;
-
-			// 격자에 있지 않는 사람들은 패스.
-			if (x == -1 && y == -1)
-				continue;
-
-			// 본인이 가고 싶은 편의점 좌표
-			Pair market = markets[idx];
-			int ex = market.x;
-			int ey = market.y;
-
-			for (int d = 0; d < 4; d++) {
-				int nx = x + dirs[d][0];
-				int ny = y + dirs[d][1];
-
-				// 격자를 벗어난다면 넘어감.
-				if (!inRange(nx, ny))
-					continue;
-
-				// 이동할 수 없는 칸(누군가 존재했던 베이스캠프, 누군가 도착한 편의점)
-				if (cannotMove[nx][ny])
-					continue;
-
-				int fromDist = Math.abs(x - ex) + Math.abs(y - ey);
-				int toDist = Math.abs(nx - ex) + Math.abs(ny - ey);
-
-				if (toDist < fromDist) {
-					people[idx].x = nx;
-					people[idx].y = ny;
-					break;
-				}
-			}
-		}
-	}
-
-	private static boolean inRange(int nx, int ny) {
-		return 0 <= nx && nx < N && 0 <= ny && ny < N;
-	}
+    static int[] dx = {-1, 0, 0, 1};
+    static int[] dy = {0, -1, 1, 0};
+    static int n, m, t = 0;
+    static boolean[][] visited;
+    static int[][] map;
+    static class Node implements Comparable<Node>{
+        int x, y;
+        int len = 0;
+        Node(int x, int y){
+            this.x = x;
+            this.y = y;
+        }
+        Node(int x, int y, int len){
+            this.x = x;
+            this.y = y;
+            this.len = len;
+        }
+        @Override
+        public int compareTo(Node t) {
+            if(this.len == t.len) {
+                if(this.x == t.x) {
+                    return Integer.compare(this.y, t.y);
+                }
+                return Integer.compare(this.x, t.x);
+            }
+            return Integer.compare(this.len, t.len);
+        }
+    }
+    static ArrayList<Node> basecamp = new ArrayList<>();
+    static ArrayList<Node> combini = new ArrayList<>();
+    static ArrayList<Node> people = new ArrayList<>();
+    static Queue<Node> queue = new LinkedList<>();
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+        n = Integer.parseInt(st.nextToken()); m = Integer.parseInt(st.nextToken());
+        //맵과 방문 초기화
+        visited = new boolean[n][n];
+        //BFS용 거리 체크
+        map = new int[n][n];
+        //베이스캠프
+        for(int i = 0; i < n; i++) {
+            st = new StringTokenizer(br.readLine(), " ");
+            for(int j = 0; j < n; j++) {
+                if(Integer.parseInt(st.nextToken()) == 1)
+                    basecamp.add(new Node(i,j));
+            }
+        }
+        //편의점
+        for(int i = 0; i < m; i++) {
+            st = new StringTokenizer(br.readLine(), " ");
+            combini.add(new Node(Integer.parseInt(st.nextToken())-1, Integer.parseInt(st.nextToken())-1));
+        }
+        while(true) {
+            //1
+            for(int i = 0; i < people.size(); i++) {
+                Node tmp = people.get(i);
+                if(tmp.x == combini.get(i).x && tmp.y == combini.get(i).y)
+                    continue;
+                else {
+                    queue.add(combini.get(i));
+                    bfs2(tmp);
+                    int ln = Integer.MAX_VALUE;
+                    for(int j = 0; j < 4; j++) {
+                        int nx = tmp.x + dx[j];
+                        int ny = tmp.y + dy[j];
+                        if(0 <= nx && nx < n && 0 <= ny && ny < n) {
+                            if(map[nx][ny] == 2 && !visited[nx][ny]) {
+                                ln = 2;
+                                break;
+                            }
+                            else if(map[nx][ny] != 0 && map[nx][ny] < ln && !visited[nx][ny]) {
+                                ln = map[nx][ny];
+                            }
+                        }
+                    }
+                    for(int j = 0; j < 4; j++) {
+                        int nx = tmp.x + dx[j];
+                        int ny = tmp.y + dy[j];
+                        if(0 <= nx && nx < n && 0 <= ny && ny < n)
+                            if(map[nx][ny] == ln && !visited[nx][ny]) {
+                                people.get(i).x = nx;
+                                people.get(i).y = ny;
+                                break;
+                            }
+                    }
+                }
+            }
+            //2
+            for(int i = 0; i < people.size(); i++) {
+                Node tmp = people.get(i);
+                if(tmp.x == combini.get(i).x && tmp.y == combini.get(i).y) {
+                    visited[tmp.x][tmp.y] = true;
+                }
+            }
+            //3
+            if(t < m) {
+                Node tmp = combini.get(t);
+                queue.add(tmp);
+                bfs();
+                ArrayList<Node> tmparr = new ArrayList<>();
+                for(Node a : basecamp) {
+                    if(map[a.x][a.y] != 0)
+                        tmparr.add(new Node(a.x, a.y, map[a.x][a.y]));
+                }
+                Collections.sort(tmparr);
+                visited[tmparr.get(0).x][tmparr.get(0).y] = true;
+                people.add(new Node(tmparr.get(0).x,tmparr.get(0).y));
+            }
+            if(check()) {
+                System.out.println(t+1);
+                return;
+            }
+            t++;
+        }
+    }
+    static boolean check() {
+        for(int i = 0; i < combini.size(); i++) {
+            Node com = combini.get(i);
+            if(!visited[com.x][com.y])
+                return false;
+        }
+        return true;
+    }
+    static void bfs2(Node p) {
+        boolean[][] visited2 = new boolean[n][n];
+        map = new int[n][n];
+        for(int i = 0; i < n; i++)
+            System.arraycopy(visited[i], 0, visited2[i], 0, visited[i].length);
+        visited2[queue.peek().x][queue.peek().y] = true;
+        map[queue.peek().x][queue.peek().y] = 2;
+        while(!queue.isEmpty()) {
+            Node tmp = queue.poll();
+            for(int i = 0; i < 4; i++) {
+                int nx = tmp.x + dx[i];
+                int ny = tmp.y + dy[i];
+                if(0 <= nx && nx < n && 0 <= ny && ny < n) {
+                    if(!visited2[nx][ny]) {
+                        visited2[nx][ny] = true;
+                        queue.add(new Node(nx,ny));
+                        map[nx][ny] = map[tmp.x][tmp.y] + 1;
+                        if(nx == p.x && ny == p.y)
+                            queue.clear();
+                    }
+                }
+            }
+        }
+    }
+    static void bfs() {
+        boolean[][] visited2 = new boolean[n][n];
+        map = new int[n][n];
+        //arraycopy를 줄여야하나?
+        for(int i = 0; i < n; i++)
+            System.arraycopy(visited[i], 0, visited2[i], 0, visited[i].length);
+        visited2[queue.peek().x][queue.peek().y] = true;
+        map[queue.peek().x][queue.peek().y] = 2;
+        while(!queue.isEmpty()) {
+            Node tmp = queue.poll();
+            for(int i = 0; i < 4; i++) {
+                int nx = tmp.x + dx[i];
+                int ny = tmp.y + dy[i];
+                if(0 <= nx && nx < n && 0 <= ny && ny < n) {
+                    if(!visited2[nx][ny]) {
+                        visited2[nx][ny] = true;
+                        queue.add(new Node(nx,ny));
+                        map[nx][ny] = map[tmp.x][tmp.y] + 1;
+                    }
+                }
+            }
+        }
+    }
 }
