@@ -47,7 +47,7 @@ public class Main {
 	}
 
 	private static void ball(int turn) {
-		int t = (turn - 1) % (4 * N) + 1;
+		int t = (turn - 1) % (4 * N);
 		if (t < N) {
 			int r = t;
 			for (int c = 0; c < N; c++) {
