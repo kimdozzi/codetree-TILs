@@ -150,14 +150,11 @@ public class Main {
 		}
 
 		// 박멸 시작.
-		Tree StartTree = treeBoard[sx][sy];
-		int x = StartTree.x;
-		int y = StartTree.y;
-		sprayBoard[x][y] = C + 1;
+		sprayBoard[sx][sy] = C + 1;
 
 		for (int d = 0; d < 4; d++) {
-			int nx = x;
-			int ny = y;
+			int nx = sx;
+			int ny = sy;
 			for (int k = 0; k < K; k++) {
 				nx += cross[d][0];
 				ny += cross[d][1];
