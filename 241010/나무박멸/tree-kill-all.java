@@ -125,7 +125,6 @@ public class Main {
     
         ans += maxDel;
 
-		deleteHerb();
     
         // 찾은 칸에 제초제를 뿌립니다.
         if(tree[maxX][maxY] > 0) {
@@ -170,6 +169,7 @@ public class Main {
             stepTwo();
 
             // 제초제의 기간을 1년 감소시킵니다.
+			deleteHerb();
             
 
             // 3단계 : 가장 많이 박멸되는 칸에 제초제를 뿌립니다.
