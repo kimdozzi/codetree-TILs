@@ -174,7 +174,6 @@ public class Main {
 			}
 		}
 
-		return true;
 	}
 
 	private static void update() {
