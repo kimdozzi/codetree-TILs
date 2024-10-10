@@ -55,7 +55,7 @@ public class Main {
 				if (throwBall(r, c))
 					return;
 			}
-		} else if (t < 2 * N) {
+		} else if (N <= t && t < 2 * N) {
 			int c = t % N;
 			for (int r = N - 1; r >= 0; r--) {
 				// 해당 선에 사람이 있으면.
