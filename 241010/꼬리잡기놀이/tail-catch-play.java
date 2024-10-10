@@ -49,6 +49,7 @@ public class Main {
 	}
 
 	private static void ball(int t) {
+        t %= N;
 		if (t == N) {
 			// 90도 회전.
 			int[][] temp = new int[N][N];
