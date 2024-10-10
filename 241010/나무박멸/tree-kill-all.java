@@ -142,8 +142,11 @@ public class Main {
                         herb[nx][ny] = c;
                         break;
                     }
-                    tree[nx][ny] = 0;
-                    herb[nx][ny] = c;
+                    if (tree[nx][ny] > 0) {
+                        tree[nx][ny] = 0;
+                        herb[nx][ny] = c;
+                    }
+                    
                 }
             }
         }
@@ -170,7 +173,6 @@ public class Main {
 
             // 제초제의 기간을 1년 감소시킵니다.
 			deleteHerb();
-            
 
             // 3단계 : 가장 많이 박멸되는 칸에 제초제를 뿌립니다.
             stepThree();
