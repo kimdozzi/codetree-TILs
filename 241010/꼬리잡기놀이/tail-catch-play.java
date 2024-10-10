@@ -249,7 +249,7 @@ public class Main {
 					if (board[nx][ny] == 0)
 						continue;
 
-					if (board[current.x][current.y] == 1 && board[nx][ny] == 4) {
+					if (board[current.x][current.y] == 1 && (board[nx][ny] == 4 || board[nx][ny] == 3)) {
 						headList.set(i, new Pair(nx, ny));
 						visit[nx][ny] = true;
 						newBoard[nx][ny] = board[current.x][current.y];
