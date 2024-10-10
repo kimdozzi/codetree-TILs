@@ -76,9 +76,7 @@ public class Main {
 			update();
 
 			// 제초제 뿌리기
-			boolean canSpay = spray();
-			if (!canSpay)
-				break;
+			spray();
 
 			// 제초된 나무들을 정리합니다.
 			sprayUpdate();
