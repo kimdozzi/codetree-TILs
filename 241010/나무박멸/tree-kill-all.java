@@ -1,294 +1,181 @@
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.Scanner;
 
-class Tree implements Comparable<Tree> {
-	int x;
-	int y;
-	int cnt;
-
-	public Tree(int x, int y, int cnt) {
-		this.x = x;
-		this.y = y;
-		this.cnt = cnt;
-	}
-
-	@Override
-	public int compareTo(Tree t) {
-		if (this.cnt != t.cnt) {
-			return t.cnt - this.cnt;
-		}
-		if (this.x != t.x) {
-			return this.x - t.x;
-		}
-		return this.y - t.y;
-	}
-}
-
 public class Main {
-	static final int WALL = -1;
-	static final int EMPTY = 0;
-	static final int EXIST = 1;
-	static int answer = 0;
-	static int[][] dirs = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
-	static int[][] cross = {{1, 1}, {-1, -1}, {1, -1}, {-1, 1}};
-	static int N, M, K, C; // 격자크기, 박멸이 진행되는 년 수, 제초제 확산 범위, 제초제가 남아있는 년 수
-	static int[][] board; // 벽, 빈칸, 나무의 그루 수
-	static int[][] sprayBoard; // 제초제가 남아있는 년 수를 담고 있는 배열
-	static Tree[][] treeBoard;
+    public static final int DIR_NUM = 4;
+    public static final int MAX_N = 20;
+    
+    public static int n, m, k, c;
+    public static int[][] tree = new int[MAX_N + 1][MAX_N + 1];
+    public static int[][] addTree = new int[MAX_N + 1][MAX_N + 1];
+    public static int[][] herb = new int[MAX_N + 1][MAX_N + 1];
+    
+    public static int ans;
+    
+    public static boolean isOutRange(int x, int y) {
+        return !(1 <= x && x <= n && 1 <= y && y <= n);
+    }
+    
+    // 입력을 받는 등 초기 작업을 합니다.
+    public static void init() {
+        Scanner sc = new Scanner(System.in);
+        
+        n = sc.nextInt();
+        m = sc.nextInt();
+        k = sc.nextInt();
+        c = sc.nextInt();
+        
+        for(int i = 1; i <= n; i++)
+            for(int j = 1; j <= n; j++)
+                tree[i][j] = sc.nextInt();
+    }
+    
+    // 1단계 : 인접한 네 개의 칸 중 나무가 있는 칸의 수만큼 나무가 성장합니다.
+    public static void stepOne() {
+        int[] dx = new int[]{-1,  0, 1, 0};
+        int[] dy = new int[]{ 0, -1, 0, 1};
+    
+        for(int i = 1; i <= n; i++)
+            for(int j = 1; j <= n; j++) {
+                if(tree[i][j] <= 0) continue;
+    
+                // 나무가 있는 칸의 수(cnt)만큼 나무가 성장합니다.
+                int cnt = 0;
+                for(int dir = 0; dir < 4; dir++) {
+                    int nx = i + dx[dir];
+                    int ny = j + dy[dir];
+                    if(isOutRange(nx, ny)) continue;
+                    if(tree[nx][ny] > 0) cnt++;
+                }
+                tree[i][j] += cnt;
+            }
+    }
+    
+    // 2단계 : 기존에 있었던 나무들은 아무것도 없는 칸에 번식을 진행합니다.
+    public static void stepTwo() {
+        int[] dx = new int[]{-1,  0, 1, 0};
+        int[] dy = new int[]{ 0, -1, 0, 1};
+    
+        // 모든 나무에서 동시에 일어나는 것을 구현하기 위해 하나의 배열을 더 이용합니다.
+        // addTree를 초기화해줍니다.
+        for(int i = 1; i <= n; i++)
+            for(int j = 1; j <= n; j++) 
+                addTree[i][j] = 0;
+    
+        for(int i = 1; i <= n; i++)
+            for(int j = 1; j <= n; j++) {
+                if(tree[i][j] <= 0) continue;
+    
+                // 해당 나무와 인접한 나무 중 아무도 없는 칸의 개수를 찾습니다.
+                int cnt = 0;
+                for(int dir = 0; dir < 4; dir++) {
+                    int nx = i + dx[dir];
+                    int ny = j + dy[dir];
+                    if(isOutRange(nx, ny)) continue;
+                    if(herb[nx][ny] > 0) continue;
+                    if(tree[nx][ny] == 0) cnt++;
+                }
+    
+                // 인접한 나무 중 아무도 없는 칸은 cnt로 나눠준 만큼 번식합니다.
+                for(int dir = 0; dir < 4; dir++) {
+                    int nx = i + dx[dir];
+                    int ny = j + dy[dir];
+                    if(isOutRange(nx, ny)) continue;
+                    if(herb[nx][ny] > 0) continue;
+                    if(tree[nx][ny] == 0) addTree[nx][ny] += tree[i][j] / cnt;
+                }
+            }
+        
+        // addTree를 더해 번식을 동시에 진행시킵니다.
+        for(int i = 1; i <= n; i++)
+            for(int j = 1; j <= n; j++) tree[i][j] += addTree[i][j];
+    }
+    
+    // 3단계 : 가장 많이 박멸되는 칸에 제초제를 뿌립니다.
+    public static void stepThree() {
+        int[] dx = new int[]{-1,  1, 1, -1};
+        int[] dy = new int[]{-1, -1, 1,  1};
+    
+        int maxDel = 0;
+        int maxX = 1;
+        int maxY = 1;
+    
+        for(int i = 1; i <= n; i++)
+            for(int j = 1; j <= n; j++) {
+                // 모든 칸에 대해 제초제를 뿌려봅니다. 각 칸에서 제초제를 뿌릴 시 박멸되는 나무의 그루 수를 계산하고,
+                // 이 값이 최대가 되는 지점을 찾아줍니다.
+                if(tree[i][j] <= 0) continue;
+                int cnt = tree[i][j];
+                for(int dir = 0; dir < 4; dir++) {
+                    int nx = i;
+                    int ny = j;
+                    for(int x = 1; x <= k; x++) {
+                        nx = nx + dx[dir];
+                        ny = ny + dy[dir];
+                        if(isOutRange(nx, ny)) break;
+                        if(tree[nx][ny] <= 0) break;
+                        cnt += tree[nx][ny];
+                    }
+                }
+                if(maxDel < cnt) {
+                    maxDel = cnt;
+                    maxX = i;
+                    maxY = j;
+                }
+            }
+    
+        ans += maxDel;
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		N = sc.nextInt();
-		M = sc.nextInt();
-		K = sc.nextInt();
-		C = sc.nextInt();
+		deleteHerb();
+    
+        // 찾은 칸에 제초제를 뿌립니다.
+        if(tree[maxX][maxY] > 0) {
+            tree[maxX][maxY] = 0;
+            herb[maxX][maxY] = c;
+            for(int dir = 0; dir < 4; dir++) {
+                int nx = maxX;
+                int ny = maxY;
+                for(int x = 1; x <= k; x++) {
+                    nx = nx + dx[dir];
+                    ny = ny + dy[dir];
+                    if(isOutRange(nx, ny)) break;
+                    if(tree[nx][ny] < 0) break;
+                    if(tree[nx][ny] == 0) {
+                        herb[nx][ny] = c;
+                        break;
+                    }
+                    tree[nx][ny] = 0;
+                    herb[nx][ny] = c;
+                }
+            }
+        }
+    }
+    
+    // 제초제의 기간을 1년 감소시킵니다.
+    public static void deleteHerb() {
+        for(int i = 1; i <= n; i++)
+            for(int j = 1; j <= n; j++) 
+                if(herb[i][j] > 0) 
+                    herb[i][j] -= 1;
+    }
 
-		board = new int[N][N];
-		sprayBoard = new int[N][N];
-		treeBoard = new Tree[N][N];
+    public static void main(String[] args) {
+        // 입력을 받는 등 초기 작업을 합니다.
+        init();
 
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N; j++) {
-				int cnt = sc.nextInt();
-				if (cnt > 0)
-					board[i][j] = 1;
-				else
-					board[i][j] = cnt;
+        for(int i = 1; i <= m; i++) {
+            // 1단계 : 인접한 네 개의 칸 중 나무가 있는 칸의 수만큼 나무가 성장합니다.
+            stepOne();
 
-				if (board[i][j] == EXIST) {
-					treeBoard[i][j] = new Tree(i, j, cnt);
-				} else {
-					treeBoard[i][j] = null;
-				}
-			}
-		}
+            // 2단계 : 기존에 있었던 나무들은 아무것도 없는 칸에 번식을 진행합니다.
+            stepTwo();
 
-		for (int t = 1; t <= M; t++) {
-			// 박멸 년 수를 1씩 감소합니다.
-			if (t > 1)
-				decrease();
+            // 제초제의 기간을 1년 감소시킵니다.
+            
 
-			// 나무가 있는 좌표를 구합니다.
-			findTree();
+            // 3단계 : 가장 많이 박멸되는 칸에 제초제를 뿌립니다.
+            stepThree();
+        }
 
-			// 나무가 있는 칸들을 업데이트 해줍니다.
-			update();
-
-			// 제초제 뿌리기
-			spray();
-
-			// 제초된 나무들을 정리합니다.
-			sprayUpdate();
-
-		}
-		System.out.println(answer);
-	}
-
-	private static void decrease() {
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N; j++) {
-				if (sprayBoard[i][j] > 0)
-					sprayBoard[i][j]--;
-			}
-		}
-	}
-
-	private static void sprayUpdate() {
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N; j++) {
-				if (sprayBoard[i][j] > 0) {
-					if (treeBoard[i][j] != null) {
-						answer += treeBoard[i][j].cnt;
-						treeBoard[i][j] = null;
-					}
-					board[i][j] = EMPTY;
-				}
-			}
-		}
-	}
-
-	private static void spray() {
-		int MIN_N = Integer.MIN_VALUE;
-		int sx = 0, sy = 0;
-
-		// 나무가 가장 많이 박멸되는 칸 찾기.
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N; j++) {
-				if (treeBoard[i][j] == null)
-					continue;
-				Tree tree = treeBoard[i][j];
-				int x = tree.x;
-				int y = tree.y;
-				int cnt = tree.cnt;
-
-				for (int d = 0; d < 4; d++) {
-					int nx = x;
-					int ny = y;
-					for (int k = 0; k < K; k++) {
-						nx += cross[d][0];
-						ny += cross[d][1];
-
-						if (!inRange(nx, ny))
-							continue;
-
-						if (board[nx][ny] == EMPTY || board[nx][ny] == WALL)
-							continue;
-
-						if (board[nx][ny] == EXIST) {
-							cnt += treeBoard[nx][ny].cnt;
-						}
-					}
-				}
-
-				if (MIN_N < cnt) {
-					MIN_N = cnt;
-					sx = i;
-					sy = j;
-				}
-			}
-		}
-
-		// 박멸 시작.
-		sprayBoard[sx][sy] = C + 1;
-
-		for (int d = 0; d < 4; d++) {
-			int nx = sx;
-			int ny = sy;
-			for (int k = 0; k < K; k++) {
-				nx += cross[d][0];
-				ny += cross[d][1];
-
-				if (!inRange(nx, ny))
-					break;
-
-				if (board[nx][ny] == WALL)
-					break;
-
-				sprayBoard[nx][ny] = C + 1;
-			}
-		}
-
-	}
-
-	private static void update() {
-		// System.out.println("== 업데이트 전 board를 확인 ==");
-		// printBoard();
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N; j++) {
-				if (treeBoard[i][j] != null) {
-					board[i][j] = EXIST;
-				}
-			}
-		}
-	}
-
-	private static void spread() {
-		Queue<Tree> q = new LinkedList<>();
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N; j++) {
-				if (treeBoard[i][j] != null) {
-					Tree tree = treeBoard[i][j];
-					q.add(new Tree(tree.x, tree.y, tree.cnt));
-				}
-			}
-		}
-
-		while (!q.isEmpty()) {
-			Tree tree = q.poll();
-			int x = tree.x;
-			int y = tree.y;
-			int cnt = tree.cnt;
-			int emptyCnt = 0;
-
-			for (int d = 0; d < 4; d++) {
-				int nx = x + dirs[d][0];
-				int ny = y + dirs[d][1];
-
-				if (!inRange(nx, ny))
-					continue;
-
-				if (board[nx][ny] == EXIST || board[nx][ny] == WALL || sprayBoard[nx][ny] > 0)
-					continue;
-
-				emptyCnt++;
-			}
-
-			if (emptyCnt == 0)
-				continue;
-
-			int val = cnt / emptyCnt;
-			if (val == 0)
-				continue;
-
-			for (int d = 0; d < 4; d++) {
-				int nx = x + dirs[d][0];
-				int ny = y + dirs[d][1];
-
-				if (!inRange(nx, ny))
-					continue;
-
-				if (board[nx][ny] == EXIST || board[nx][ny] == WALL || sprayBoard[nx][ny] > 0)
-					continue;
-
-				if (treeBoard[nx][ny] == null) {
-					Tree newTree = new Tree(nx, ny, val);
-					treeBoard[nx][ny] = newTree;
-				} else {
-					treeBoard[nx][ny].cnt += val;
-				}
-			}
-		}
-	}
-
-	private static void grow(Queue<Tree> q) {
-		while (!q.isEmpty()) {
-			Tree tree = q.poll();
-			int x = tree.x;
-			int y = tree.y;
-
-			int growthCount = 0;
-			for (int d = 0; d < 4; d++) {
-				int nx = x + dirs[d][0];
-				int ny = y + dirs[d][1];
-
-				if (!inRange(nx, ny))
-					continue;
-
-				// 벽이거나 나무가 없다면 패스
-				if (board[nx][ny] == WALL || board[nx][ny] == EMPTY)
-					continue;
-
-				if (board[nx][ny] == EXIST) {
-					growthCount++;
-				}
-			}
-			treeBoard[x][y].cnt += growthCount;
-		}
-	}
-
-	private static boolean inRange(int nx, int ny) {
-		return 0 <= nx && nx < N && 0 <= ny && ny < N;
-	}
-
-	private static void findTree() {
-		Queue<Tree> q = new LinkedList<>();
-
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N; j++) {
-
-				// 나무가 있는 칸이면
-				if (board[i][j] == EXIST) {
-					q.add(new Tree(i, j, treeBoard[i][j].cnt));
-				}
-			}
-		}
-
-		// 나무들은 동시에 성장합니다.
-		grow(q);
-
-		// 인접한 4개의 칸 중 벽, 다른 나무, 제초제가 없는 칸에서 번식 시작.
-		spread();
-	}
-
+        System.out.print(ans);
+    }
 }
