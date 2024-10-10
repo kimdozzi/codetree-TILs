@@ -167,6 +167,8 @@ public class Main {
 					if (visit[nx][ny])
 						continue;
 
+                    if (board[nx][ny] == 3)
+						continue;
 					visit[nx][ny] = true;
 					newQ.add(new int[] {nx, ny, current[2] + 1});
 				}
