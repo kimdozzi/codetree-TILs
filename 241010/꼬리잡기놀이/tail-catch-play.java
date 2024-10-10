@@ -49,7 +49,7 @@ public class Main {
 	private static void ball(int turn) {
 		int t = (turn - 1) % (4 * N) + 1;
 		if (t < N) {
-			int r = t;
+			int r = t%N;
 			for (int c = 0; c < N; c++) {
 				// 해당 선에 사람이 있으면.
 				if (throwBall(r, c))
