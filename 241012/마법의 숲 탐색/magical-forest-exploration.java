@@ -30,6 +30,7 @@ public class Main {
         boolean flag = 0 <= x - 1 && x + 1 < C && y + 1 < R + 3;
         flag = flag && (A[y - 1][x - 1] == 0);
         flag = flag && (A[y - 1][x] == 0);
+        flag = flag && (A[y - 1][x + 1] == 0);
         flag = flag && (A[y][x - 1] == 0);
         flag = flag && (A[y][x] == 0);
         flag = flag && (A[y][x + 1] == 0);
