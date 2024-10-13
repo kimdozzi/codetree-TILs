@@ -30,7 +30,6 @@ public class Main {
 	static int N, K = 2;
 	static int[][] board; // 격자판 정보
 	static List<List<Pair>> groups; // 각 그룹의 좌표를 담는 리스트 (조합 사용할 예정)
-	static boolean[] groupVisit; // 조합을 위한 방문 배열
 	static int[] groupCombination;
 	static int answer;
 	static boolean[][] visit;
@@ -72,7 +71,6 @@ public class Main {
 				}
 			}
 		}
-		groupVisit = new boolean[groups.size()];
 		groupCombination = new int[K];
 		rec_func(0, 0);
 	}
@@ -191,12 +189,8 @@ public class Main {
 			return;
 		}
 		for (int i = start; i < groups.size(); i++) {
-			if (groupVisit[i])
-				continue;
-			groupVisit[i] = true;
 			groupCombination[cnt] = i;
 			rec_func(i + 1, cnt + 1);
-			groupVisit[i] = false;
 		}
 	}
 
